@@ -10,26 +10,9 @@ var monthlyExpensesSchema = new Schema({
     endDate: Date
 });
 
-
-var monthlyExpensesModel = mongoose.model('monthlyExpenses', monthlyExpensesSchema);
-
-monthlyExpensesSchema.methods.addMonthlyExpense = function (monthlyExpense) {
-    monthlyExpensesModel.month = monthlyExpense.month;
-    monthlyExpensesModel.startDate = monthlyExpense.startDate;
-    monthlyExpense.endDate = monthlyExpense.endDate;
-
-    return monthlyExpensesModel.save((err) => {
-        if (err) {
-            console.log('error during saving');
-            return;
-        }
-
-        console.log('successful saving');
-    });
+monthlyExpensesSchema.methods.addMonthlyExpense = function (callback) {
+    return this.save(callback);
 };
 
 
-module.exports.addMonthlyExpense = monthlyExpensesSchema.methods.addMonthlyExpense;
-//module.exports = {
-//    monthlyExpenses: monthlyExpensesModel
-//};
+module.exports = mongoose.model('monthlyExpenses', monthlyExpensesSchema);
