@@ -3,6 +3,7 @@
  */
 
 var path = require('path');
+var bodyParser = new require('body-parser');
 var express = new require('express');
 var app = express();
 var main = require('./controllers/main');
@@ -12,7 +13,10 @@ var debug = require('debug')('app');
 
 mongoose.connect('mongodb://localhost/expenses');
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(main);
+
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('port', process.env.PORT || 3000);
