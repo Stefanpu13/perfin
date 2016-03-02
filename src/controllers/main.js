@@ -6,9 +6,9 @@ var router = express.Router();
 
 router.use('/monthlyExpenses', require('./monthlyExpenses'));
 
-router.get('/', function (req, res) {
-    res.end('Main page');
-});
+//router.get('/', function (req, res) {
+//    res.end('Main page');
+//});
 
 router.get('/home', function(req, res) {
     res.end('Hello World!')

@@ -3,7 +3,7 @@
  */
 'use strict';
 
-var express = require('express');
+var express = new require('express');
 var router = express.Router();
 var monthlyExpenseModel = new require('../models/monthlyExpensesModel');
 
