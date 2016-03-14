@@ -6,15 +6,24 @@
 //var ReactDOM = require('react-dom');
 import React from 'react'
 import ReactDOM from 'react-dom'
+import AccountingPeriod from './accountingPeriod'
 
 
-var Hello = React.createClass({
-    render: function() {
-        return <div>Hello {this.props.name}</div>;
+class Hello extends React.Component{
+    render(){
+        //return <AccountingPeriod accountingDays={[2, 4, 6]}></AccountingPeriod>
+        return <AccountingPeriod></AccountingPeriod>
+
     }
-});
+};
+
+//var Hello = React.createClass({
+//    render: function() {
+//        return <div>Hello {this.props.name}</div>;
+//    }
+//});
 
 ReactDOM.render(
-    <Hello name="World edited 33" />,
+    <Hello name="World edited a" />,
     document.getElementById('container')
 );
