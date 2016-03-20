@@ -11,7 +11,8 @@ var nodemon = require('gulp-nodemon');
 var babel = require('gulp-babel');
 var reactify = require('reactify');
 
-gulp.task('start', ()=> {
+
+gulp.task('start',['copyBootstrap', 'copyFonts'], ()=> {
     buildUsingBrowserify();
 
     nodemon({
@@ -27,7 +28,6 @@ gulp.task('start', ()=> {
             debug: true,
             cache: {}, packageCache: {}, fullPaths: true
         }));
-
         watcher.on('update', bundleWatcher);
 
         watcher.on('log', log);
@@ -74,6 +74,17 @@ gulp.task('start', ()=> {
     }
 
 });
+
+gulp.task('copyBootstrap', ()=>{
+    gulp.src('node_modules/bootstrap/dist/css/bootstrap.min.css')
+    .pipe(gulp.dest('public/styles'))
+});
+
+gulp.task('copyFonts', ()=>{
+    gulp.src('node_modules/bootstrap/dist/fonts/**')
+        .pipe(gulp.dest('public/fonts'))
+});
+
 
 gulp.task('default', () => {
     gulp.watch('gulpfile.js', ['start'])
