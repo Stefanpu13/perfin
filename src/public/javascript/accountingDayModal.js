@@ -23,7 +23,9 @@ export default class AccountingDayModal extends React.Component {
     }
 
     componentDidUpdate() {
-        this.refs.currentValueInput.getInputDOMNode().focus()
+        if(this.refs && this.refs.currentValueInput) {
+            this.refs.currentValueInput.getInputDOMNode().focus()
+        }
     }
 
     changeExpensesValue(event) {
