@@ -51,9 +51,6 @@ class StatementPeriodTable extends React.Component {
 
 
     render() {
-        //var statementPeriodDays, other;
-
-        //var {statementPeriodDays, ...other} = this.props;
         return (
             <div >
                 <Table striped bordered condensed
