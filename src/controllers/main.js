@@ -11,7 +11,7 @@ router.use('/monthlyExpenses', require('./monthlyExpenses'));
 //});
 
 router.get('/home', function(req, res) {
-    res.end('Hello World!')
+    res.send('Hello World!')
 });
 
 module.exports = router;

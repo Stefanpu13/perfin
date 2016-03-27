@@ -58,7 +58,6 @@ gulp.task('start',['copyBootstrap', 'copyFonts'], ()=> {
 
         bundle();
 
-
         function bundle() {
             b
                 .bundle()
