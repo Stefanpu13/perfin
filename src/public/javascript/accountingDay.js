@@ -9,12 +9,12 @@ function renderCategoryExpenses(expensesCategory, expensesSubcategory) {
     var total = 0;
 
     if (expensesCategory) {
-        if (expensesSubcategory) {
-            total = Number(expensesCategory[expensesSubcategory]) || 0; // NaN || num -> num
-        } else {
+        if (expensesSubcategory === 'totals') {
             for (let subcategory in expensesCategory) {
                 total += Number(expensesCategory[subcategory]);
             }
+        } else {
+            total = Number(expensesCategory[expensesSubcategory]) || 0; // NaN || num -> num
         }
     }
 
@@ -50,7 +50,7 @@ export default class AccountingDay extends React.Component {
                 {/*Edit value*/}
                 <td className="col-xs-1">
                     <div className="text-center"
-                        onClick={() => this.onExpenseClick(this.props.i)}
+                         onClick={() => this.onExpenseClick(this.props.i)}
                     >
                         <span className="glyphicon glyphicon-pencil"></span>
                     </div>
