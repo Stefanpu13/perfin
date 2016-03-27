@@ -16,8 +16,16 @@ function renderCategory(category, categoryIndex) {
     return <Tab title={category.name} eventKey={categoryIndex} key={categoryIndex}>
         <Tabs activeKey={this.state.activeSubcategory}
               onSelect={ eventKey => this.handleSubcategorySelect(eventKey)}
-              id="subCategoryTabs">
+        >
             <Tab title={category.name + ' totals'} eventKey={categoryIndex +'_-1'}>
+                <StatementPeriodTable
+                    statementPeriodDays=
+                        {this.props.currentStatementPeriod.statementPeriodDays}
+                    expensesCategory={category.name}
+                    expensesSubcategory={'totals'}
+                    onExpenseClick={this.props.onExpenseClick}
+                >
+                </StatementPeriodTable>
             </Tab>
             {
                 categoryIndex === this.state.activeCategory ?
@@ -85,7 +93,7 @@ class StatementPeriod extends React.Component {
     handleCategorySelect(eventKey) {
         this.setState({
             activeCategory: eventKey,
-            activeSubcategory: eventKey + '_' +(-1)
+            activeSubcategory: eventKey + '_' + (-1)
         });
     }
 
