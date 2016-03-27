@@ -1,9 +1,6 @@
 /**
  * Created by stefan on 3/2/2016.
  */
-
-//var React =  require('react');
-//var ReactDOM = require('react-dom');
 import jq from 'jquery'
 window.$ = window.jQuery = jq;
 //var bootstrap = require('bootstrap');
@@ -12,25 +9,19 @@ window.$ = window.jQuery = jq;
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import AccountingPeriod from './accountingPeriod'
+import AccountingPeriod from './statementPeriod'
+//import HomePage from './homePage'
+import  HomePageContainer from './containers/homePageContainer'
 
-
-class Hello extends React.Component {
+class Root extends React.Component {
     render() {
-        //return <AccountingPeriod accountingDays={[2, 4, 6]}></AccountingPeriod>
-        return <AccountingPeriod></AccountingPeriod>
-
+        //return <StatementPeriod accountingDays={[2, 4, 6]}></StatementPeriod>
+       // return <StatementPeriod></StatementPeriod>
+       return <HomePageContainer></HomePageContainer>
     }
 }
-;
-
-//var Hello = React.createClass({
-//    render: function() {
-//        return <div>Hello {this.props.name}</div>;
-//    }
-//});
 
 ReactDOM.render(
-    <Hello name="World edited a"/>,
+    <Root />,
     document.getElementById('container')
 );
