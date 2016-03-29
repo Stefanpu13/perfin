@@ -5,6 +5,50 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import HomePage from '../homePage'
 
+var currentStatementPeriod = {
+    startDate: Date(),
+    statementPeriodDays: [
+        {
+            day: new Date("3/27/2016"),
+            expenses: {
+                food: {
+                    other: 2,
+                    vegetables: 2
+                },
+                entertainment: {
+                    other: 12,
+                    travel: 33,
+                    pastime: 12
+                }
+            }
+        },
+        {
+            day: new Date("3/28/2016"),
+            expenses: {
+                food: {
+                    meat: 6,
+                    vegetables: 2
+                },
+                entertainment: {
+                    other: 2,
+                    travel: 6,
+                    pastime: 6
+                }
+            }
+        }],
+    incomes: {
+        salary: {
+            day: Date(),
+            value: 250
+        },
+        other: [{
+            day: Date(),
+            value: 15
+        }]
+    },
+    endDate: undefined
+};
+
 function getCategoriesStructure() {
     return {
         categories: [
@@ -26,49 +70,7 @@ function getCategoriesStructure() {
 }
 
 function getCurrentStatementPeriod() {
-    return {
-        startDate: Date(),
-        statementPeriodDays: [
-            {
-                day: new Date("3/27/2016"),
-                expenses: {
-                    food: {
-                        other: 2,
-                        vegetables: 2
-                    },
-                    entertainment: {
-                        other: 12,
-                        travel: 33,
-                        pastime: 12
-                    }
-                }
-            },
-            {
-                day: new Date("3/28/2016"),
-                expenses: {
-                    food: {
-                        meat: 6,
-                        vegetables: 2
-                    },
-                    entertainment: {
-                        other: 2,
-                        travel: 6,
-                        pastime: 6
-                    }
-                }
-            }],
-        incomes: {
-            salary: {
-                day: Date(),
-                value: 250
-            },
-            other: [{
-                day: Date(),
-                value: 15
-            }]
-        },
-        endDate: undefined
-    }
+    return currentStatementPeriod;
 }
 
 export default class HomePageContainer extends React.Component {
@@ -86,9 +88,14 @@ export default class HomePageContainer extends React.Component {
         }, 2000)
     }
 
-    onExpenseClick(statementPeriodDay, i) {
-        console.log(statementPeriodDay);
-        console.log(i);
+    onEditExpense(newExpenses, day, category, subcategory) {
+        var statementPeriodDay = currentStatementPeriod.statementPeriodDays.find( statementPeriodDay =>{
+            return statementPeriodDay.day == day;
+        });
+
+        statementPeriodDay.expenses[category][subcategory] = Number(newExpenses);
+
+        this.setState({currentStatementPeriod: getCurrentStatementPeriod()});
     }
 
     render() {
@@ -96,7 +103,8 @@ export default class HomePageContainer extends React.Component {
             <HomePage currentStatementPeriod={this.state.currentStatementPeriod}
                       categoryTree={getCategoriesStructure()}
                       loaded={this.state.loaded}
-                      onExpenseClick={(statementPeriodDay, i) => this.onExpenseClick(statementPeriodDay, i)}
+                      onEditExpense={(newExpenses, day, category, subcategory) =>
+                      this.onEditExpense(newExpenses, day, category, subcategory)}
             >
             </HomePage>
         )

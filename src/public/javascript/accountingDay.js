@@ -26,8 +26,8 @@ export default class AccountingDay extends React.Component {
         super(props);
     }
 
-    onExpenseClick(index) {
-        this.props.onExpenseClick(index)
+    onEditExpense(index) {
+        this.props.onEditExpense(index)
     }
 
     render() {
@@ -50,7 +50,7 @@ export default class AccountingDay extends React.Component {
                 {/*Edit value*/}
                 <td className="col-xs-1">
                     <div className="text-center"
-                         onClick={() => this.onExpenseClick(this.props.i)}
+                         onClick={() => this.onEditExpense(this.props.i)}
                     >
                         <span className="glyphicon glyphicon-pencil"></span>
                     </div>

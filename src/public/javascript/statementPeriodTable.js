@@ -31,22 +31,18 @@ class StatementPeriodTable extends React.Component {
     close() {
         this.setState({showModal: false})
     }
-    //
-    //onTableClick(event) {
-    //    var x = event;
-    //}
 
     updateDailyExpenses(newDailyExpenses, index) {
-        var dates = this.state.accountingDates;
-        dates[index] = newDailyExpenses;
-        this.setState({
-            accountingDates: dates,
-            showModal: false
-        });
+        //var dates = this.state.accountingDates;
+        //dates[index] = newDailyExpenses;
+        //this.setState({
+        //    accountingDates: dates,
+        //    showModal: false
+        //});
     }
 
-    onExpenseClick(statementPeriodDay, index){
-        this.props.onExpenseClick(statementPeriodDay, index);
+    onEditExpense(statementPeriodDay, index){
+        this.props.onEditExpense(statementPeriodDay, index);
     }
 
 
@@ -69,7 +65,7 @@ class StatementPeriodTable extends React.Component {
                         this.props.statementPeriodDays.map((statementPeriodDay, i) => {
                             return <AccountingDay
                                 {...this.props}
-                                onExpenseClick = {(index) => this.onExpenseClick(statementPeriodDay, index)}
+                                onEditExpense = {(index) => this.onEditExpense(statementPeriodDay, index)}
                                 statementPeriodDay={statementPeriodDay}
                                 i={i}
                                 key={i}
@@ -86,7 +82,7 @@ class StatementPeriodTable extends React.Component {
                  onUpdateDailyExpenses={(newDailyExpenses) => {
                  this.updateDailyExpenses(newDailyExpenses, this.state.dayIndex)}
                  }
-                 currentDailyExpenses={this.state.accountingDates[this.state.dayIndex]}>
+                 statementPeriodDay={this.props.statementPeriodDays[this.state.dayIndex]}>
                  </AccountingDayModal>*/}
             </div>
         );

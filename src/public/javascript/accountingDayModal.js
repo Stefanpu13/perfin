@@ -22,11 +22,11 @@ export default class AccountingDayModal extends React.Component {
         this.setState({currentDailyExpenses: newProps.currentDailyExpenses, expensesInputStyle: 'success'});
     }
 
-    componentDidUpdate() {
-        if(this.refs && this.refs.currentValueInput) {
-            this.refs.currentValueInput.getInputDOMNode().focus()
-        }
-    }
+    //componentDidUpdate() {
+    //    if(this.refs && this.refs.currentValueInput) {
+    //        this.refs.currentValueInput.getInputDOMNode().focus()
+    //    }
+    //}
 
     changeExpensesValue(event) {
         var expensesStyle = isValidExpensesValue(event.target.value) ? 'success' : 'error';
