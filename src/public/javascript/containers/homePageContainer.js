@@ -19,7 +19,8 @@ var currentStatementPeriod = {
                     other: 12,
                     travel: 33,
                     pastime: 12
-                }
+                },
+                supplies: {}
             }
         },
         {
@@ -33,7 +34,8 @@ var currentStatementPeriod = {
                     other: 2,
                     travel: 6,
                     pastime: 6
-                }
+                },
+                supplies: {}
             }
         }],
     incomes: {
@@ -54,15 +56,15 @@ function getCategoriesStructure() {
         categories: [
             {
                 name: 'food',
-                subcategories: ['fruit', 'vegetables', 'meat', 'dairy', 'confections', 'meals', 'other']
+                subcategories: ['totals', 'fruit', 'vegetables', 'meat', 'dairy', 'confections', 'meals', 'other']
             }, {
                 name: 'entertainment',
-                subcategories: ['travel', 'sport', 'pastime', 'other']
+                subcategories: ['totals', 'travel', 'sport', 'pastime', 'other']
 
             },
             {
                 name: 'supplies',
-                subcategories: ['rent', 'home', 'other']
+                subcategories: ['totals', 'rent', 'home', 'other']
 
             }
         ]
@@ -83,19 +85,41 @@ export default class HomePageContainer extends React.Component {
         setTimeout(()=> {
             this.setState({
                 loaded: true,
-                currentStatementPeriod: getCurrentStatementPeriod()
+
+                // currentStatementPeriod: getCurrentStatementPeriod()
+                currentStatementPeriod: undefined
+
             });
         }, 2000)
     }
 
     onEditExpense(newExpenses, day, category, subcategory) {
-        var statementPeriodDay = currentStatementPeriod.statementPeriodDays.find( statementPeriodDay =>{
+        var statementPeriodDay = this.state.currentStatementPeriod.statementPeriodDays.find(statementPeriodDay => {
             return statementPeriodDay.day == day;
         });
 
         statementPeriodDay.expenses[category][subcategory] = Number(newExpenses);
+        this.setState({currentStatementPeriod: this.state.currentStatementPeriod});
+    }
 
-        this.setState({currentStatementPeriod: getCurrentStatementPeriod()});
+    onCreateNewStatementPeriod(periodFirstDay) {
+        // check if start Date is defined and valid
+
+        if (!periodFirstDay) {
+            periodFirstDay = {
+                day: new Date()
+            }
+        } else {
+            //validate start date - between the second day of the current period and today
+        }
+
+        $.post('http://localhost:3000/api/monthlyStatementPeriod/create', periodFirstDay, (res) => {
+                this.setState({currentStatementPeriod: res});
+                console.log(res);
+        });
+        // make request to create the start date
+        // then receive new statementPeriod and change 'current statement Period value'
+
     }
 
     render() {
@@ -105,6 +129,7 @@ export default class HomePageContainer extends React.Component {
                       loaded={this.state.loaded}
                       onEditExpense={(newExpenses, day, category, subcategory) =>
                       this.onEditExpense(newExpenses, day, category, subcategory)}
+                      onCreateNewStatementPeriod={(periodFirstDay) => this.onCreateNewStatementPeriod(periodFirstDay)}
             >
             </HomePage>
         )

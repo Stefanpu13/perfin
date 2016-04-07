@@ -24,7 +24,7 @@ export default class HomePage extends React.Component {
 
     componentWillReceiveProps() {
         this.setState({
-            createStatementButtonDisabled: !this.props.currentStatementPeriod
+            createStatementButtonDisabled: this.props.currentStatementPeriod
         });
     }
 
@@ -38,7 +38,7 @@ export default class HomePage extends React.Component {
                         <Navbar.Form pullRight>
                             <Input type="text" placeholder="Search income statement"/>
                             {' '}
-                            <Button onClick={() => {}}
+                            <Button onClick={() => this.props.onCreateNewStatementPeriod()}
                                     disabled={this.state.createStatementButtonDisabled}
                             >Create Statement Period</Button>
                             {' '}
