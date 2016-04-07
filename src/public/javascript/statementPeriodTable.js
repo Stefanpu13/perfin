@@ -9,65 +9,58 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import AccountingDay from './accountingDay'
 import {Table} from 'react-bootstrap'
-import {Modal} from 'react-bootstrap'
 
-import  AccountingDayModal  from './accountingDayModal'
+function getCategoryExpensesTotal(expenses, expensesCategory, expensesSubcategory) {
+    var total = 0;
+
+    if (expenses && expensesCategory) {
+        if (expensesSubcategory === 'totals') {
+            for (let subcategory in expensesCategory) {
+                total += Number(expensesCategory[subcategory]);
+            }
+        } else {
+            total = Number(expensesCategory[expensesSubcategory]) || 0; // NaN || num -> num
+        }
+    }
+
+    return total;
+}
 
 
 class StatementPeriodTable extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            //startDate: new Date('3/10/2016'),
-            //accountingDates: [3, 4, 5, 7],
-            showModal: false
-        };
+        this.state = {showEditButtonRow: false}
     }
 
-    open(index) {
-        this.setState({showModal: true, dayIndex: index});
+    componentWillReceiveProps(newProps) {
+        this.setState({showEditButtonRow: this.props.expensesSubcategory !== 'totals'});
     }
-
-    close() {
-        this.setState({showModal: false})
-    }
-
-    updateDailyExpenses(newDailyExpenses, index) {
-        //var dates = this.state.accountingDates;
-        //dates[index] = newDailyExpenses;
-        //this.setState({
-        //    accountingDates: dates,
-        //    showModal: false
-        //});
-    }
-
-    onEditExpense(statementPeriodDay, index){
-        this.props.onEditExpense(statementPeriodDay, index);
-    }
-
 
     render() {
         return (
             <div >
-                <Table striped bordered condensed
-                      // onClick={(event)=> this.onTableClick(event)}
-                >
+                <Table striped bordered condensed>
                     <thead>
                     <tr>
                         <th>Date</th>
                         <th>Money spent</th>
-                        <th>Edit expenditures</th>
+                        {this.state.showEditButtonRow ? <th>Edit expenditures</th> : undefined}
                         <th>Add to expenditures</th>
                     </tr>
                     </thead>
                     <tbody>
                     {
                         this.props.statementPeriodDays.map((statementPeriodDay, i) => {
+                            var total =
+                                getCategoryExpensesTotal(statementPeriodDay.expenses, this.props.expensesCategory,
+                                    this.props.expensesSubcategory);
+
                             return <AccountingDay
-                                {...this.props}
-                                onEditExpense = {(index) => this.onEditExpense(statementPeriodDay, index)}
-                                statementPeriodDay={statementPeriodDay}
-                                i={i}
+                                total={total}
+                                day={statementPeriodDay.day}
+                                showEditButtonRow={this.state.showEditButtonRow}
+                                onEditExpense={() => this.props.onEditExpense(statementPeriodDay)}
                                 key={i}
                             >
                             </AccountingDay>
@@ -75,15 +68,6 @@ class StatementPeriodTable extends React.Component {
                     }
                     </tbody>
                 </Table>
-
-                {/*<AccountingDayModal
-                 showModal={this.state.showModal}
-                 onClose={()=> this.close()}
-                 onUpdateDailyExpenses={(newDailyExpenses) => {
-                 this.updateDailyExpenses(newDailyExpenses, this.state.dayIndex)}
-                 }
-                 statementPeriodDay={this.props.statementPeriodDays[this.state.dayIndex]}>
-                 </AccountingDayModal>*/}
             </div>
         );
     }
