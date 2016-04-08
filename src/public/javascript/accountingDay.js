@@ -5,56 +5,39 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import moment from 'moment'
 
-function renderCategoryExpenses(expensesCategory, expensesSubcategory) {
-    var total = 0;
-
-    if (expensesCategory) {
-        if (expensesSubcategory === 'totals') {
-            for (let subcategory in expensesCategory) {
-                total += Number(expensesCategory[subcategory]);
-            }
-        } else {
-            total = Number(expensesCategory[expensesSubcategory]) || 0; // NaN || num -> num
-        }
-    }
-
-    return total;
-}
-
 export default class AccountingDay extends React.Component {
     constructor(props) {
         super(props);
     }
 
-    onEditExpense(index) {
-        this.props.onEditExpense(index)
-    }
 
     render() {
-
-        var total = renderCategoryExpenses(
-            this.props.statementPeriodDay.expenses[this.props.expensesCategory], this.props.expensesSubcategory);
 
         return (
             <tr>
                 {/*Date col*/}
                 <td className="col-xs-2">
                     <div >
-                        {moment(this.props.statementPeriodDay.day).format('MM/DD/YYYY')}
+                        {moment(this.props.day).format('MM/DD/YYYY')}
                     </div>
                 </td>
                 {/*Value col*/}
                 <td className="col-xs-3">
-                    {total} лв
+                    {this.props.total} лв
                 </td>
                 {/*Edit value*/}
-                <td className="col-xs-1">
-                    <div className="text-center"
-                         onClick={() => this.onEditExpense(this.props.i)}
-                    >
-                        <span className="glyphicon glyphicon-pencil"></span>
-                    </div>
-                </td>
+                {
+                    this.props.showEditButtonRow ?
+                        <td className="col-xs-1">
+                            <div className="text-center"
+                                 onClick={() => this.props.onEditExpense()}
+                            >
+                                <span className="glyphicon glyphicon-pencil"></span>
+                            </div>
+                        </td>
+                        :
+                        undefined
+                }
                 {/*Add new value*/}
                 <td className="col-xs-1">
                     <div className="text-center">
