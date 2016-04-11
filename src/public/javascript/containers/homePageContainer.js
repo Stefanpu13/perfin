@@ -82,23 +82,34 @@ export default class HomePageContainer extends React.Component {
     }
 
     componentDidMount() {
-        setTimeout(()=> {
-            this.setState({
-                loaded: true,
+        //setTimeout(()=> {
+        //    this.setState({
+        //        loaded: true,
+        //
+        //        // currentStatementPeriod: getCurrentStatementPeriod()
+        //        currentStatementPeriod: undefined
+        //
+        //    });
+        //}, 2000)
 
-                // currentStatementPeriod: getCurrentStatementPeriod()
-                currentStatementPeriod: undefined
+        $.get('http://localhost:3000/api/monthlyStatementPeriod/getCurrent', (res) => {
+            this.setState({currentStatementPeriod: res, loaded:true});
+            console.log(res);
+        });
 
-            });
-        }, 2000)
     }
 
     onEditExpense(newExpenses, day, category, subcategory) {
-        var statementPeriodDay = this.state.currentStatementPeriod.statementPeriodDays.find(statementPeriodDay => {
+        let statementPeriodDay = this.state.currentStatementPeriod.statementPeriodDays.find(statementPeriodDay => {
             return statementPeriodDay.day == day;
         });
 
-        statementPeriodDay.expenses[category][subcategory] = Number(newExpenses);
+        let oldExpenses = statementPeriodDay.expenses || {};
+        oldExpenses[category] = oldExpenses[category] || {};
+        oldExpenses[category][subcategory] = Number(newExpenses);
+        statementPeriodDay.expenses = oldExpenses;
+
+        // update statement period, then update state
         this.setState({currentStatementPeriod: this.state.currentStatementPeriod});
     }
 

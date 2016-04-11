@@ -13,13 +13,13 @@ import {Table} from 'react-bootstrap'
 function getCategoryExpensesTotal(expenses, expensesCategory, expensesSubcategory) {
     var total = 0;
 
-    if (expenses && expensesCategory) {
+    if (expenses && expenses[expensesCategory]) {
         if (expensesSubcategory === 'totals') {
-            for (let subcategory in expensesCategory) {
-                total += Number(expensesCategory[subcategory]);
+            for (let subcategory in expenses[expensesCategory]) {
+                total += Number(expenses[expensesCategory][subcategory]);
             }
         } else {
-            total = Number(expensesCategory[expensesSubcategory]) || 0; // NaN || num -> num
+            total = Number(expenses[expensesCategory][expensesSubcategory]) || 0; // NaN || num -> num
         }
     }
 

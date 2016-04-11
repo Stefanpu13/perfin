@@ -47,7 +47,10 @@ class StatementPeriod extends React.Component {
     onEditExpense(statementPeriodDay) {
         let activeCategory = this.state.activeCategory;
         let activeSubcategory = this.state.activeSubcategory.split(' ')[1];
-        let currentDailyExpenses = statementPeriodDay.expenses[activeCategory][activeSubcategory];
+        let currentDailyExpenses =
+            statementPeriodDay.expenses &&
+            statementPeriodDay.expenses[activeCategory] &&
+            statementPeriodDay.expenses[activeCategory][activeSubcategory];
 
         this.setState({
             showModal: true, currentDailyExpenses: currentDailyExpenses || 0, day: statementPeriodDay.day
