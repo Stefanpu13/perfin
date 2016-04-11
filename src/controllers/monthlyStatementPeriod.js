@@ -15,7 +15,7 @@ router.get('/previous', (req, res) => {
     res.end('Previous month');
 });
 
-router.post('/create', function (req, res) {
+router.post('/create', (req, res) => {
     var statementPeriodFirstDay = req.body;
 
     var newStatementPeriod = {
@@ -30,6 +30,10 @@ router.post('/create', function (req, res) {
             res.status(200).json(statementPeriod);
         }
     });
+});
+
+router.get('/getCurrent', (req, res) => {
+
 });
 
 module.exports = router;
