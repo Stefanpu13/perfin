@@ -12,6 +12,7 @@ var mongoose = new require('mongoose');
 var debug = require('debug')('app');
 
 mongoose.connect('mongodb://localhost/expenses');
+//mongoose.connect('mongodb://127.0.0.1/expenses'); // use when need to work offline
 
 app.use('/', express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
