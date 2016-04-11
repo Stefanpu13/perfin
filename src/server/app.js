@@ -13,7 +13,7 @@ var debug = require('debug')('app');
 
 mongoose.connect('mongodb://localhost/expenses');
 
-app.use('/', express.static(path.join(__dirname, 'public')));
+app.use('/', express.static(path.join(__dirname, '../dist')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(main);
