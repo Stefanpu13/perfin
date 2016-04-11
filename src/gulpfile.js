@@ -1,6 +1,9 @@
 /**
  * Created by stefan on 3/2/2016.
  */
+
+'use strict';
+
 var gulp = new require('gulp');
 var watchify = new require('watchify');
 var browserify = new require('browserify');
@@ -11,14 +14,49 @@ var nodemon = require('gulp-nodemon');
 var babel = require('gulp-babel');
 var reactify = require('reactify');
 
+let b = browserify({
+    entries: ['public/javascript/main.js'],
+    cache: {},
+    packageCache: {},
+    plugin: [watchify],
+    debug: true
+});
 
-gulp.task('start',['copyBootstrap', 'copyFonts'], ()=> {
+let bundleJavascript =()=> {
+    b
+        .bundle()
+        .pipe(vinyl_source_stream('public/javascript/main.js'))
+        .pipe(rename('bundle.js'))
+        //.pipe(rename('mainTr.js'))
+        .pipe(gulp.dest('dist/javascript'))
+};
+
+let log = (msg) => {
+    process.stdout.write(msg + '\n')
+};
+
+gulp.task('buildHTML', () => {
+    gulp.src('public/**/*.html')
+        .pipe(gulp.dest('dist'));
+});
+
+gulp.task('buildCSS', ()=> {
+    gulp.src('public/**/*.css')
+        .pipe(gulp.dest('dist'));
+});
+
+gulp.task('copyBootstrap', ()=> {
+    gulp.src('node_modules/bootstrap/dist/css/bootstrap.min.css')
+        .pipe(gulp.dest('dist/styles'))
+});
+
+gulp.task('copyFonts', ()=> {
+    gulp.src('node_modules/bootstrap/dist/fonts/**')
+        .pipe(gulp.dest('dist/fonts'))
+});
+
+gulp.task('start', ['copyBootstrap', 'copyFonts', 'buildHTML', 'buildCSS'], ()=> {
     buildUsingBrowserify();
-
-    nodemon({
-        script: 'app.js',
-        ignore: ['public/**']
-    });
 
     // Slightly different approach
     function buildUsingWatchify() {
@@ -44,48 +82,37 @@ gulp.task('start',['copyBootstrap', 'copyFonts'], ()=> {
     }
 
     function buildUsingBrowserify() {
-        var b = browserify({
-            entries: ['public/javascript/main.js'],
-            cache: {},
-            packageCache: {},
-            plugin: [watchify],
-            debug: true
-        });
 
         b.transform(babelify, {presets: ["es2015", 'react']});
-        b.on('log', log);
-        b.on('update', bundle);
 
-        bundle();
+        bundleJavascript();
+       // copyToDist();
 
-        function bundle() {
-            b
-                .bundle()
-                .pipe(vinyl_source_stream('public/javascript/main.js'))
-                .pipe(rename('bundle.js'))
-                //.pipe(rename('mainTr.js'))
-                .pipe(gulp.dest('public/javascript/'))
+        function copyToDist() {
+            gulp.src('public/javascript/**/*.js')
+                .pipe(babel({
+                    presets: ['es2015', 'react']
+                }))
+                .pipe(gulp.dest('dist/javascript'));
         }
     }
-
-    function log(msg) {
-        process.stdout.write(msg + '\n');
-    }
-
 });
 
-gulp.task('copyBootstrap', ()=>{
-    gulp.src('node_modules/bootstrap/dist/css/bootstrap.min.css')
-    .pipe(gulp.dest('public/styles'))
-});
+gulp.task('default', ['start'], () => {
+    nodemon({
+        script: 'server/app.js',
+        ignore: ['public/**', 'dist/**']
+    });
 
-gulp.task('copyFonts', ()=>{
-    gulp.src('node_modules/bootstrap/dist/fonts/**')
-        .pipe(gulp.dest('public/fonts'))
-});
+    b.on('update', () => {
+        bundleJavascript();
+        //copyToDist();
+    });
 
+    b.on('log', log);
 
-gulp.task('default', () => {
+    gulp.watch('public/**/*.html', ['buildHTML']);
+    gulp.watch('public/**/*.css', ['buildCSS']);
+
     gulp.watch('gulpfile.js', ['start'])
 });
-
