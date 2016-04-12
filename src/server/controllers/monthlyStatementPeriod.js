@@ -17,7 +17,6 @@ router.get('/previous', (req, res) => {
 
 router.post('/create', (req, res) => {
     var statementPeriodFirstDay = req.body;
-
     var newStatementPeriod = {
         startDate: statementPeriodFirstDay.day,
         statementPeriodDays: [statementPeriodFirstDay]
@@ -32,8 +31,25 @@ router.post('/create', (req, res) => {
     });
 });
 
-router.get('/getCurrent', (req, res) => {
+router.post('/update', (req, res) => {
+    var statementPeriod = req.body;
+    StatementPeriodModel.findByIdAndUpdate(statementPeriod._id, statementPeriod, {new: true}, (err, updatedPeriod) => {
+        if (err) {
+            res.status(500).end('Error occurred');
+        } else {
+            res.status(200).json(updatedPeriod);
+        }
+    })
+});
 
+router.get('/getCurrent', (req, res) => {
+    StatementPeriodModel.getCurrentStatementPeriod(function (err, statementPeriod) {
+        if (err) {
+            res.status(500).end('Error occurred');
+        } else {
+            res.status(200).json(statementPeriod);
+        }
+    })
 });
 
 module.exports = router;

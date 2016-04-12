@@ -22,9 +22,9 @@ export default class HomePage extends React.Component {
         };
     }
 
-    componentWillReceiveProps() {
+    componentWillReceiveProps(newProps) {
         this.setState({
-            createStatementButtonDisabled: this.props.currentStatementPeriod !== undefined
+            createStatementButtonDisabled: newProps.currentStatementPeriod !== null
         });
     }
 

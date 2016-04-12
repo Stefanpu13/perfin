@@ -72,7 +72,9 @@ function getCategoriesStructure() {
 }
 
 function getCurrentStatementPeriod() {
-    return currentStatementPeriod;
+    $.get('http://localhost:3000/api/monthlyStatementPeriod/getCurrent', (res) => {
+        this.setState({currentStatementPeriod: res, loaded: true});
+    });
 }
 
 export default class HomePageContainer extends React.Component {
@@ -82,35 +84,25 @@ export default class HomePageContainer extends React.Component {
     }
 
     componentDidMount() {
-        //setTimeout(()=> {
-        //    this.setState({
-        //        loaded: true,
-        //
-        //        // currentStatementPeriod: getCurrentStatementPeriod()
-        //        currentStatementPeriod: undefined
-        //
-        //    });
-        //}, 2000)
-
-        $.get('http://localhost:3000/api/monthlyStatementPeriod/getCurrent', (res) => {
-            this.setState({currentStatementPeriod: res, loaded:true});
-            console.log(res);
-        });
-
+        getCurrentStatementPeriod.apply(this);
     }
 
     onEditExpense(newExpenses, day, category, subcategory) {
-        let statementPeriodDay = this.state.currentStatementPeriod.statementPeriodDays.find(statementPeriodDay => {
-            return statementPeriodDay.day == day;
+        var statementPeriod = JSON.parse(JSON.stringify(this.state.currentStatementPeriod));
+        var statementPeriodDay = statementPeriod.statementPeriodDays.find(std => {
+            return std.day == day;
         });
 
-        let oldExpenses = statementPeriodDay.expenses || {};
+        var oldExpenses = statementPeriodDay.expenses || {};
         oldExpenses[category] = oldExpenses[category] || {};
         oldExpenses[category][subcategory] = Number(newExpenses);
         statementPeriodDay.expenses = oldExpenses;
 
         // update statement period, then update state
-        this.setState({currentStatementPeriod: this.state.currentStatementPeriod});
+        $.post('http://localhost:3000/api/monthlyStatementPeriod/update', statementPeriod,
+            (res) => {
+                this.setState({currentStatementPeriod: statementPeriod});
+            });
     }
 
     onCreateNewStatementPeriod(periodFirstDay) {
@@ -125,12 +117,10 @@ export default class HomePageContainer extends React.Component {
         }
 
         $.post('http://localhost:3000/api/monthlyStatementPeriod/create', periodFirstDay, (res) => {
-                this.setState({currentStatementPeriod: res});
-                console.log(res);
+            this.setState({currentStatementPeriod: res});
         });
         // make request to create the start date
         // then receive new statementPeriod and change 'current statement Period value'
-
     }
 
     render() {

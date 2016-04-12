@@ -26,7 +26,6 @@ function getCategoryExpensesTotal(expenses, expensesCategory, expensesSubcategor
     return total;
 }
 
-
 class StatementPeriodTable extends React.Component {
     constructor(props) {
         super(props);
