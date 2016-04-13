@@ -33,13 +33,17 @@ router.post('/create', (req, res) => {
 
 router.post('/update', (req, res) => {
     var statementPeriod = req.body;
-    StatementPeriodModel.findByIdAndUpdate(statementPeriod._id, statementPeriod, {new: true}, (err, updatedPeriod) => {
-        if (err) {
-            res.status(500).end('Error occurred');
-        } else {
-            res.status(200).json(updatedPeriod);
-        }
-    })
+    var obj = {
+        statementPerio&dDays: statementPeriod.statementPeriodDays
+    };
+    StatementPeriodModel.findByIdAndUpdate(statementPeriod._id, obj, {new: true},
+        (err, updatedPeriod) => {
+            if (err) {
+                res.status(500).end('Error occurred');
+            } else {
+                res.status(200).json(updatedPeriod);
+            }
+        })
 });
 
 router.get('/getCurrent', (req, res) => {

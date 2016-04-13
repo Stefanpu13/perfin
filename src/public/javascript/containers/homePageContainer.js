@@ -99,10 +99,34 @@ export default class HomePageContainer extends React.Component {
         statementPeriodDay.expenses = oldExpenses;
 
         // update statement period, then update state
-        $.post('http://localhost:3000/api/monthlyStatementPeriod/update', statementPeriod,
-            (res) => {
+        //$.post('http://localhost:3000/api/monthlyStatementPeriod/update', statementPeriod,
+        //    (res) => {
+        //        this.setState({currentStatementPeriod: statementPeriod});
+        //    },'json');
+
+        $.post({
+            beforeSend: function (xhrObj) {
+                xhrObj.setRequestHeader("Content-Type", "application/json");
+                xhrObj.setRequestHeader("Accept", "application/json");
+            },
+            url: 'http://localhost:3000/api/monthlyStatementPeriod/update',
+            data:JSON.stringify( statementPeriod),
+            dataType:'json',
+            success: (res) =>{
                 this.setState({currentStatementPeriod: statementPeriod});
-            });
+            }
+        });
+        //$.ajax({
+        //    'url': 'http://localhost:3000/api/monthlyStatementPeriod/update',
+        //    'type': 'POST',
+        //    'data': statementPeriod,
+        //    'contentType': 'application/json',
+        //    'success':
+        //        (res) => {
+        //            this.setState({currentStatementPeriod: statementPeriod});
+        //        }
+        //
+        //})
     }
 
     onCreateNewStatementPeriod(periodFirstDay) {
