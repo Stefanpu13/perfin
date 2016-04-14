@@ -34,7 +34,7 @@ router.post('/create', (req, res) => {
 router.post('/update', (req, res) => {
     var statementPeriod = req.body;
     var obj = {
-        statementPerio&dDays: statementPeriod.statementPeriodDays
+        statementPeriodDays: statementPeriod.statementPeriodDays
     };
     StatementPeriodModel.findByIdAndUpdate(statementPeriod._id, obj, {new: true},
         (err, updatedPeriod) => {
