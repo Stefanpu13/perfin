@@ -31,12 +31,17 @@ router.post('/create', (req, res) => {
     });
 });
 
-router.post('/update', (req, res) => {
-    var statementPeriod = req.body;
-    var obj = {
-        statementPeriodDays: statementPeriod.statementPeriodDays
+router.post('/update/:statementPeriodId/:statementPeriodDayId', (req, res) => {
+    let statementPeriodId = req.params.statementPeriodId;
+    let statementPeriodDayId = req.params.statementPeriodDayId;
+    var newExpenses = req.body;
+
+    var query = {_id: statementPeriodId, 'statementPeriodDays._id': statementPeriodDayId};
+    var updateOptions = {
+        $set: {'statementPeriodDays.$.expenses': newExpenses}
     };
-    StatementPeriodModel.findByIdAndUpdate(statementPeriod._id, obj, {new: true},
+
+    StatementPeriodModel.findOneAndUpdate(query, updateOptions, {new: true},
         (err, updatedPeriod) => {
             if (err) {
                 res.status(500).end('Error occurred');

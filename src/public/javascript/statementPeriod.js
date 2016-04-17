@@ -30,7 +30,7 @@ class StatementPeriod extends React.Component {
         let activeSubcategory = this.state.activeSubcategory.split(' ')[1];
 
         this.setState({showModal: false});
-        this.props.onEditExpense(newDailyExpenses, this.state.day, activeCategory, activeSubcategory)
+        this.props.onEditExpense(this.state.statementPeriodDay, newDailyExpenses,  activeCategory, activeSubcategory)
     }
 
     onCategorySelect(eventKey) {
@@ -53,11 +53,13 @@ class StatementPeriod extends React.Component {
             statementPeriodDay.expenses[activeCategory][activeSubcategory];
 
         this.setState({
-            showModal: true, currentDailyExpenses: currentDailyExpenses || 0, day: statementPeriodDay.day
+            showModal: true,
+            currentDailyExpenses: currentDailyExpenses || 0,
+            statementPeriodDay: statementPeriodDay
         });
     }
 
-    renderCategory(category, categoryIndex){
+    renderCategory(category, categoryIndex) {
         return <Tab title={category.name} eventKey={category.name} key={categoryIndex}>
             <Tabs activeKey={this.state.activeSubcategory}
                   onSelect={ eventKey => this.onSubcategorySelect(eventKey)}
@@ -71,7 +73,7 @@ class StatementPeriod extends React.Component {
         </Tab>
     }
 
-    renderSubcategory(category, categoryIndex, subCategory, subcategoryIndex){
+    renderSubcategory(category, categoryIndex, subCategory, subcategoryIndex) {
         var displayStyle = this.state.activeCategory + ' ' + subCategory === this.state.activeSubcategory ?
             '' : 'none';
         var styles = {display: displayStyle};

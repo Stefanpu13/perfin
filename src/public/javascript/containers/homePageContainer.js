@@ -77,6 +77,12 @@ function getCurrentStatementPeriod() {
     });
 }
 
+function updateExpenses(newExpensesValue, oldExpenses, category, subcategory) {
+    oldExpenses[category] = oldExpenses[category] || {};
+    oldExpenses[category][subcategory] = Number(newExpensesValue);
+    return oldExpenses;
+}
+
 export default class HomePageContainer extends React.Component {
     constructor(props) {
         super(props);
@@ -87,46 +93,25 @@ export default class HomePageContainer extends React.Component {
         getCurrentStatementPeriod.apply(this);
     }
 
-    onEditExpense(newExpenses, day, category, subcategory) {
-        var statementPeriod = JSON.parse(JSON.stringify(this.state.currentStatementPeriod));
-        var statementPeriodDay = statementPeriod.statementPeriodDays.find(std => {
-            return std.day == day;
-        });
+    onEditExpense(statementPeriodDay, newExpensesValue, category, subcategory) {
+        var oldExpenses = JSON.parse( JSON.stringify(statementPeriodDay.expenses || {}));
 
-        var oldExpenses = statementPeriodDay.expenses || {};
-        oldExpenses[category] = oldExpenses[category] || {};
-        oldExpenses[category][subcategory] = Number(newExpenses);
-        statementPeriodDay.expenses = oldExpenses;
+        var updatedExpenses = updateExpenses(newExpensesValue,oldExpenses, category, subcategory);
 
-        // update statement period, then update state
-        //$.post('http://localhost:3000/api/monthlyStatementPeriod/update', statementPeriod,
-        //    (res) => {
-        //        this.setState({currentStatementPeriod: statementPeriod});
-        //    },'json');
-
+        var url = 'http://localhost:3000/api/monthlyStatementPeriod/update/' +
+            this.state.currentStatementPeriod._id + '/' + statementPeriodDay._id;
         $.post({
             beforeSend: function (xhrObj) {
                 xhrObj.setRequestHeader("Content-Type", "application/json");
                 xhrObj.setRequestHeader("Accept", "application/json");
             },
-            url: 'http://localhost:3000/api/monthlyStatementPeriod/update',
-            data:JSON.stringify( statementPeriod),
+            url: url,
+            data:JSON.stringify( updatedExpenses),
             dataType:'json',
             success: (res) =>{
-                this.setState({currentStatementPeriod: statementPeriod});
+                this.setState({currentStatementPeriod: res});
             }
         });
-        //$.ajax({
-        //    'url': 'http://localhost:3000/api/monthlyStatementPeriod/update',
-        //    'type': 'POST',
-        //    'data': statementPeriod,
-        //    'contentType': 'application/json',
-        //    'success':
-        //        (res) => {
-        //            this.setState({currentStatementPeriod: statementPeriod});
-        //        }
-        //
-        //})
     }
 
     onCreateNewStatementPeriod(periodFirstDay) {
@@ -152,8 +137,8 @@ export default class HomePageContainer extends React.Component {
             <HomePage currentStatementPeriod={this.state.currentStatementPeriod}
                       categoryTree={getCategoriesStructure()}
                       loaded={this.state.loaded}
-                      onEditExpense={(newExpenses, day, category, subcategory) =>
-                      this.onEditExpense(newExpenses, day, category, subcategory)}
+                      onEditExpense={(statementPeriodDay,newExpenses,  category, subcategory) =>
+                      this.onEditExpense(statementPeriodDay, newExpenses,  category, subcategory)}
                       onCreateNewStatementPeriod={(periodFirstDay) => this.onCreateNewStatementPeriod(periodFirstDay)}
             >
             </HomePage>
