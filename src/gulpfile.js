@@ -4,15 +4,15 @@
 
 'use strict';
 
-var gulp = new require('gulp');
-var watchify = new require('watchify');
-var browserify = new require('browserify');
-var babelify = require("babelify");
-var vinyl_source_stream = require('vinyl-source-stream');
-var rename = require('gulp-rename');
-var nodemon = require('gulp-nodemon');
-var babel = require('gulp-babel');
-var reactify = require('reactify');
+let gulp = new require('gulp');
+let watchify = new require('watchify');
+let browserify = new require('browserify');
+let babelify = require("babelify");
+let vinyl_source_stream = require('vinyl-source-stream');
+let rename = require('gulp-rename');
+let nodemon = require('gulp-nodemon');
+let babel = require('gulp-babel');
+let reactify = require('reactify');
 
 let b = browserify({
     entries: ['public/javascript/main.js'],

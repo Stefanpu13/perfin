@@ -20,6 +20,7 @@ var statementPeriodSchema = new Schema({
 statementPeriodSchema.statics.createStatementPeriod = function (statementPeriod, callback) {
     return this.create(statementPeriod, callback);// Model instance method
 };
+
 statementPeriodSchema.statics.getCurrentStatementPeriod = function (callback) {
     return this.findOne({}, {}, { sort: { 'created_at' : -1 } }, callback);
 };

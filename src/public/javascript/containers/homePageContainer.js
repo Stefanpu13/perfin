@@ -94,9 +94,9 @@ export default class HomePageContainer extends React.Component {
     }
 
     onEditExpense(statementPeriodDay, newExpensesValue, category, subcategory) {
-        var oldExpenses = JSON.parse( JSON.stringify(statementPeriodDay.expenses || {}));
+        var oldExpenses = JSON.parse(JSON.stringify(statementPeriodDay.expenses || {}));
 
-        var updatedExpenses = updateExpenses(newExpensesValue,oldExpenses, category, subcategory);
+        var updatedExpenses = updateExpenses(newExpensesValue, oldExpenses, category, subcategory);
 
         var url = 'http://localhost:3000/api/monthlyStatementPeriod/update/' +
             this.state.currentStatementPeriod._id + '/' + statementPeriodDay._id;
@@ -106,9 +106,9 @@ export default class HomePageContainer extends React.Component {
                 xhrObj.setRequestHeader("Accept", "application/json");
             },
             url: url,
-            data:JSON.stringify( updatedExpenses),
-            dataType:'json',
-            success: (res) =>{
+            data: JSON.stringify(updatedExpenses),
+            dataType: 'json',
+            success: (res) => {
                 this.setState({currentStatementPeriod: res});
             }
         });
@@ -128,8 +128,6 @@ export default class HomePageContainer extends React.Component {
         $.post('http://localhost:3000/api/monthlyStatementPeriod/create', periodFirstDay, (res) => {
             this.setState({currentStatementPeriod: res});
         });
-        // make request to create the start date
-        // then receive new statementPeriod and change 'current statement Period value'
     }
 
     render() {
