@@ -58,6 +58,8 @@ router.get('/getCurrent', (req, res) => {
         } else {
             res.status(200).json(statementPeriod);
         }
+
+        //res.status(500).end('Error occurred');
     })
 });
 

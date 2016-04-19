@@ -4,6 +4,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import HomePage from '../homePage'
+import fetchSettings from '../http/fetchSettings'
+import fetchGlobals from '../http/fetchGlobals'
 
 var currentStatementPeriod = {
     startDate: Date(),
@@ -74,15 +76,14 @@ function getCategoriesStructure() {
 function getCurrentStatementPeriod() {
 
     fetch('http://localhost:3000/api/monthlyStatementPeriod/getCurrent')
-        .then((res) => {
-            return res.json();
-        })
+        .then(fetchGlobals.checkStatus)
+        .then(res => res.json())
         .then((currentStatementPeriod) => {
             this.setState({currentStatementPeriod: currentStatementPeriod, loaded: true});
+        })
+        .catch(error => {
+            console.log('request failed', error)
         });
-    //$.get('http://localhost:3000/api/monthlyStatementPeriod/getCurrent', (res) => {
-    //    this.setState({currentStatementPeriod: res, loaded: true});
-    //});
 }
 
 function updateExpenses(newExpensesValue, oldExpenses, category, subcategory) {
@@ -108,27 +109,8 @@ export default class HomePageContainer extends React.Component {
 
         var url = 'http://localhost:3000/api/monthlyStatementPeriod/update/' +
             this.state.currentStatementPeriod._id + '/' + statementPeriodDay._id;
-        //$.post({
-        //    beforeSend: function (xhrObj) {
-        //        xhrObj.setRequestHeader("Content-Type", "application/json");
-        //        xhrObj.setRequestHeader("Accept", "application/json");
-        //    },
-        //    url: url,
-        //    data: JSON.stringify(updatedExpenses),
-        //    dataType: 'json',
-        //    success: (res) => {
-        //        this.setState({currentStatementPeriod: res});
-        //    }
-        //});
 
-        fetch(url, {
-            method: 'post',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(updatedExpenses)
-        })
+        fetch(url, Object.assign({body: JSON.stringify(updatedExpenses)}, fetchSettings.postRequest))
             .then((res) => res.json())
             .then(updatedStatementPeriod => {
                 this.setState({currentStatementPeriod: updatedStatementPeriod});
@@ -146,21 +128,15 @@ export default class HomePageContainer extends React.Component {
             //validate start date - between the second day of the current period and today
         }
 
-        //$.post('http://localhost:3000/api/monthlyStatementPeriod/create', periodFirstDay, (res) => {
-        //    this.setState({currentStatementPeriod: res});
-        //});
-
-        fetch('http://localhost:3000/api/monthlyStatementPeriod/create', {
-            method: 'post',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: periodFirstDay
-        })
+        fetch('http://localhost:3000/api/monthlyStatementPeriod/create',
+            Object.assign({body: JSON.stringify(periodFirstDay)}, fetchSettings.postRequest))
+            .then(fetchGlobals.checkStatus)
             .then((res) => res.json())
             .then(newStatementPeriod => {
                 this.setState({currentStatementPeriod: newStatementPeriod});
+            })
+            .catch(error => {
+                console.log('request failed', error)
             });
     }
 
