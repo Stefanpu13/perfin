@@ -1,12 +1,6 @@
 /**
  * Created by stefan on 3/2/2016.
  */
-import jq from 'jquery'
-window.$ = window.jQuery = jq;
-//var bootstrap = require('bootstrap');
-//import bootstrap from 'bootstrap';
-
-
 import React from 'react'
 import ReactDOM from 'react-dom'
 import AccountingPeriod from './statementPeriod'

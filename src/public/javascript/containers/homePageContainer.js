@@ -72,9 +72,17 @@ function getCategoriesStructure() {
 }
 
 function getCurrentStatementPeriod() {
-    $.get('http://localhost:3000/api/monthlyStatementPeriod/getCurrent', (res) => {
-        this.setState({currentStatementPeriod: res, loaded: true});
-    });
+
+    fetch('http://localhost:3000/api/monthlyStatementPeriod/getCurrent')
+        .then((res) => {
+            return res.json();
+        })
+        .then((currentStatementPeriod) => {
+            this.setState({currentStatementPeriod: currentStatementPeriod, loaded: true});
+        });
+    //$.get('http://localhost:3000/api/monthlyStatementPeriod/getCurrent', (res) => {
+    //    this.setState({currentStatementPeriod: res, loaded: true});
+    //});
 }
 
 function updateExpenses(newExpensesValue, oldExpenses, category, subcategory) {
@@ -100,18 +108,31 @@ export default class HomePageContainer extends React.Component {
 
         var url = 'http://localhost:3000/api/monthlyStatementPeriod/update/' +
             this.state.currentStatementPeriod._id + '/' + statementPeriodDay._id;
-        $.post({
-            beforeSend: function (xhrObj) {
-                xhrObj.setRequestHeader("Content-Type", "application/json");
-                xhrObj.setRequestHeader("Accept", "application/json");
+        //$.post({
+        //    beforeSend: function (xhrObj) {
+        //        xhrObj.setRequestHeader("Content-Type", "application/json");
+        //        xhrObj.setRequestHeader("Accept", "application/json");
+        //    },
+        //    url: url,
+        //    data: JSON.stringify(updatedExpenses),
+        //    dataType: 'json',
+        //    success: (res) => {
+        //        this.setState({currentStatementPeriod: res});
+        //    }
+        //});
+
+        fetch(url, {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             },
-            url: url,
-            data: JSON.stringify(updatedExpenses),
-            dataType: 'json',
-            success: (res) => {
-                this.setState({currentStatementPeriod: res});
-            }
-        });
+            body: JSON.stringify(updatedExpenses)
+        })
+            .then((res) => res.json())
+            .then(updatedStatementPeriod => {
+                this.setState({currentStatementPeriod: updatedStatementPeriod});
+            });
     }
 
     onCreateNewStatementPeriod(periodFirstDay) {
@@ -125,9 +146,22 @@ export default class HomePageContainer extends React.Component {
             //validate start date - between the second day of the current period and today
         }
 
-        $.post('http://localhost:3000/api/monthlyStatementPeriod/create', periodFirstDay, (res) => {
-            this.setState({currentStatementPeriod: res});
-        });
+        //$.post('http://localhost:3000/api/monthlyStatementPeriod/create', periodFirstDay, (res) => {
+        //    this.setState({currentStatementPeriod: res});
+        //});
+
+        fetch('http://localhost:3000/api/monthlyStatementPeriod/create', {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: periodFirstDay
+        })
+            .then((res) => res.json())
+            .then(newStatementPeriod => {
+                this.setState({currentStatementPeriod: newStatementPeriod});
+            });
     }
 
     render() {

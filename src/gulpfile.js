@@ -45,17 +45,17 @@ gulp.task('buildCSS', ()=> {
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('copyBootstrap', ()=> {
-    gulp.src('node_modules/bootstrap/dist/css/bootstrap.min.css')
-        .pipe(gulp.dest('dist/styles'))
-});
+//gulp.task('copyBootstrap', ()=> {
+//    gulp.src('node_modules/bootstrap/dist/css/bootstrap.min.css')
+//        .pipe(gulp.dest('dist/styles'))
+//});
 
 gulp.task('copyFonts', ()=> {
     gulp.src('node_modules/bootstrap/dist/fonts/**')
         .pipe(gulp.dest('dist/fonts'))
 });
 
-gulp.task('start', ['copyBootstrap', 'copyFonts', 'buildHTML', 'buildCSS'], ()=> {
+gulp.task('start', ['copyFonts', 'buildHTML', 'buildCSS'], ()=> {
     buildUsingBrowserify();
 
     // Slightly different approach
