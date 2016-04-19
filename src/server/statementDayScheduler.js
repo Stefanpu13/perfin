@@ -26,27 +26,28 @@ let createDaysForCurrentPeriod = (lastDayInPeriodDate) => {
 };
 
 let startCreateStatementPeriodDaysTask = () => {
-
     nodeScheduler.scheduleJob({hour: moment().hour(), minute: moment().add(1, 'minutes').minute()}, () => {
         // Move this function to middleware that is used on navigation to home page
         StatementPeriodModel.getCurrentStatementPeriod((err, statementPeriod) => {
-            let statementPeriodDaysLength = statementPeriod.statementPeriodDays.length;
-            let lastDayInCurrentPeriod = statementPeriod.statementPeriodDays[statementPeriodDaysLength - 1];
-            let todayIsAfterLastDayInPeriod = moment().isAfter(lastDayInCurrentPeriod.day, 'day');
+            if(statementPeriod) {
+                let statementPeriodDaysLength = statementPeriod.statementPeriodDays.length;
+                let lastDayInCurrentPeriod = statementPeriod.statementPeriodDays[statementPeriodDaysLength - 1];
+                let todayIsAfterLastDayInPeriod = moment().isAfter(lastDayInCurrentPeriod.day, 'day');
 
-            if (todayIsAfterLastDayInPeriod) {
-                //addStatementPeriodDays to period
+                if (todayIsAfterLastDayInPeriod) {
+                    //addStatementPeriodDays to period
 
-                let newStatementPeriodDays = createDaysForCurrentPeriod(lastDayInCurrentPeriod.day);
-                Array.prototype.push.apply(statementPeriod.statementPeriodDays, newStatementPeriodDays);
-                StatementPeriodModel.update({}, statementPeriod,(err, raw) =>{
-                    let x = err;
-                    if(err){
-                        // TODO: how to prepare message for the user when he opens the app?
-                    }
+                    let newStatementPeriodDays = createDaysForCurrentPeriod(lastDayInCurrentPeriod.day);
+                    Array.prototype.push.apply(statementPeriod.statementPeriodDays, newStatementPeriodDays);
+                    StatementPeriodModel.update({}, statementPeriod, (err, raw) => {
+                        let x = err;
+                        if (err) {
+                            // TODO: how to prepare message for the user when he opens the app?
+                        }
 
-                });
+                    });
 
+                }
             }
         })
     })
