@@ -21,7 +21,7 @@ class StatementPeriod extends React.Component {
     }
 
     static exists(statementPeriod) {
-        return (statementPeriod !== null && statementPeriod !== undefined);
+        return (statementPeriod !== null);
     }
 
     close() {
