@@ -14,7 +14,7 @@ class Root extends React.Component {
     }
 
     onErrorReceived(error) {
-        this.setState({show: true, message: 'Error occurred'});
+        this.setState({show: true, message: error.message});
         // call this method when network/http error is received
     }
 
