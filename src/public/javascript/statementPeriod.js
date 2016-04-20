@@ -100,9 +100,7 @@ class StatementPeriod extends React.Component {
     render() {
         let statementPeriodContent;
         if (this.props.getCurrentStatementHasError) {
-            statementPeriodContent =
-                <span>
-                </span>
+            statementPeriodContent = '';
         } else {
             if (StatementPeriod.exists(this.props.currentStatementPeriod)) {
                 statementPeriodContent =
@@ -136,35 +134,9 @@ class StatementPeriod extends React.Component {
         }
 
         return (
-            //<div>
-            //    {statementPeriodContent}
-            //</div>
-
-            this.props.getCurrentStatementHasError ? <span></span> :
-                StatementPeriod.exists(this.props.currentStatementPeriod) ?
-                    <div>
-                        <Tabs activeKey={this.state.activeCategory}
-                              onSelect={eventKey =>this.onCategorySelect(eventKey)}>
-                            <Tab eventKey={'monthly totals'} title="Monthly Totals">
-                                Render monthly totals here
-                            </Tab>
-                            {
-                                this.props.categoryTree.categories
-                                    .map((category, i) =>this.renderCategory(category, i))
-                            }
-                        </Tabs>
-                        <AccountingDayModal
-                            showModal={this.state.showModal}
-                            onClose={()=> this.close()}
-                            onUpdateDailyExpenses={(newDailyExpenses) => {
-                                                    this.onUpdateDailyExpenses(newDailyExpenses, this.state.dayIndex)}}
-                            currentDailyExpenses={this.state.currentDailyExpenses}
-                        >
-                        </AccountingDayModal>
-                    </div> :
-                    <div>
-                        <h4>No statement periods exist yet</h4>
-                    </div>
+            <div>
+                {statementPeriodContent}
+            </div>
         );
     }
 }
