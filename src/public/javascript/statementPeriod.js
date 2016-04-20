@@ -20,6 +20,10 @@ class StatementPeriod extends React.Component {
         };
     }
 
+    static exists(statementPeriod) {
+        return (statementPeriod !== null && statementPeriod !== undefined);
+    }
+
     close() {
         this.setState({showModal: false})
     }
@@ -30,7 +34,7 @@ class StatementPeriod extends React.Component {
         let activeSubcategory = this.state.activeSubcategory.split(' ')[1];
 
         this.setState({showModal: false});
-        this.props.onEditExpense(this.state.statementPeriodDay, newDailyExpenses,  activeCategory, activeSubcategory)
+        this.props.onEditExpense(this.state.statementPeriodDay, newDailyExpenses, activeCategory, activeSubcategory)
     }
 
     onCategorySelect(eventKey) {
@@ -94,33 +98,73 @@ class StatementPeriod extends React.Component {
     }
 
     render() {
-        return (
-            this.props.currentStatementPeriod ?
-                <div>
-                    <Tabs activeKey={this.state.activeCategory}
-                          onSelect={eventKey =>this.onCategorySelect(eventKey)}>
-                        <Tab eventKey={'monthly totals'} title="Monthly Totals">
-                            Render monthly totals here
-                        </Tab>
-                        {
-                            this.props.categoryTree.categories
-                                .map((category, i) =>this.renderCategory(category, i))
-                        }
-                    </Tabs>
-
-                    <AccountingDayModal
-                        showModal={this.state.showModal}
-                        onClose={()=> this.close()}
-                        onUpdateDailyExpenses={(newDailyExpenses) => {
+        let statementPeriodContent;
+        if (this.props.getCurrentStatementHasError) {
+            statementPeriodContent =
+                <span>
+                </span>
+        } else {
+            if (StatementPeriod.exists(this.props.currentStatementPeriod)) {
+                statementPeriodContent =
+                    <div>
+                        <Tabs activeKey={this.state.activeCategory}
+                              onSelect={eventKey =>this.onCategorySelect(eventKey)}>
+                            <Tab eventKey={'monthly totals'} title="Monthly Totals">
+                                Render monthly totals here
+                            </Tab>
+                            {
+                                this.props.categoryTree.categories
+                                    .map((category, i) =>this.renderCategory(category, i))
+                            }
+                        </Tabs>
+                        <AccountingDayModal
+                            showModal={this.state.showModal}
+                            onClose={()=> this.close()}
+                            onUpdateDailyExpenses={(newDailyExpenses) => {
                         this.onUpdateDailyExpenses(newDailyExpenses, this.state.dayIndex)}
                         }
-                        currentDailyExpenses={this.state.currentDailyExpenses}
-                    >
-                    </AccountingDayModal>
-                </div> :
-                <div>
-                    <h4>No statement periods exist yet</h4>
-                </div>
+                            currentDailyExpenses={this.state.currentDailyExpenses}
+                        >
+                        </AccountingDayModal>
+                    </div>
+            } else {
+                statementPeriodContent =
+                    <div>
+                        <h4>No statement periods exist yet</h4>
+                    </div>
+            }
+        }
+
+        return (
+            //<div>
+            //    {statementPeriodContent}
+            //</div>
+
+            this.props.getCurrentStatementHasError ? <span></span> :
+                StatementPeriod.exists(this.props.currentStatementPeriod) ?
+                    <div>
+                        <Tabs activeKey={this.state.activeCategory}
+                              onSelect={eventKey =>this.onCategorySelect(eventKey)}>
+                            <Tab eventKey={'monthly totals'} title="Monthly Totals">
+                                Render monthly totals here
+                            </Tab>
+                            {
+                                this.props.categoryTree.categories
+                                    .map((category, i) =>this.renderCategory(category, i))
+                            }
+                        </Tabs>
+                        <AccountingDayModal
+                            showModal={this.state.showModal}
+                            onClose={()=> this.close()}
+                            onUpdateDailyExpenses={(newDailyExpenses) => {
+                                                    this.onUpdateDailyExpenses(newDailyExpenses, this.state.dayIndex)}}
+                            currentDailyExpenses={this.state.currentDailyExpenses}
+                        >
+                        </AccountingDayModal>
+                    </div> :
+                    <div>
+                        <h4>No statement periods exist yet</h4>
+                    </div>
         );
     }
 }

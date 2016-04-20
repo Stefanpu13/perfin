@@ -33,10 +33,15 @@ function getCurrentStatementPeriod() {
         .then(fetchGlobals.checkStatus)
         .then(res => res.json())
         .then((currentStatementPeriod) => {
-            this.setState({currentStatementPeriod: currentStatementPeriod, loaded: true});
+            this.setState({
+                getCurrentStatementHasError:false,
+                currentStatementPeriod: currentStatementPeriod,
+                loaded: true});
         })
         .catch(error => {
             // display dialog with message that current statement period could not be returned
+            error.message = "Could not load current statement period.";
+            this.setState({getCurrentStatementHasError: true, loaded: true});
             this.props.onErrorReceived(error);
             console.log('request failed', error)
         });
@@ -79,7 +84,6 @@ export default class HomePageContainer extends React.Component {
 
     onCreateNewStatementPeriod(periodFirstDay) {
         // check if start Date is defined and valid
-
         if (!periodFirstDay) {
             periodFirstDay = {
                 day: new Date()
@@ -106,6 +110,7 @@ export default class HomePageContainer extends React.Component {
             <HomePage currentStatementPeriod={this.state.currentStatementPeriod}
                       categoryTree={getCategoriesStructure()}
                       loaded={this.state.loaded}
+                      getCurrentStatementHasError={this.state.getCurrentStatementHasError}
                       onEditExpense={(statementPeriodDay,newExpenses,  category, subcategory) =>
                       this.onEditExpense(statementPeriodDay, newExpenses,  category, subcategory)}
                       onCreateNewStatementPeriod={(periodFirstDay) => this.onCreateNewStatementPeriod(periodFirstDay)}
