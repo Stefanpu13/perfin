@@ -7,52 +7,6 @@ import HomePage from '../homePage'
 import fetchSettings from '../http/fetchSettings'
 import fetchGlobals from '../http/fetchGlobals'
 
-var currentStatementPeriod = {
-    startDate: Date(),
-    statementPeriodDays: [
-        {
-            day: new Date("3/27/2016"),
-            expenses: {
-                food: {
-                    other: 2,
-                    vegetables: 2
-                },
-                entertainment: {
-                    other: 12,
-                    travel: 33,
-                    pastime: 12
-                },
-                supplies: {}
-            }
-        },
-        {
-            day: new Date("3/28/2016"),
-            expenses: {
-                food: {
-                    meat: 6,
-                    vegetables: 2
-                },
-                entertainment: {
-                    other: 2,
-                    travel: 6,
-                    pastime: 6
-                },
-                supplies: {}
-            }
-        }],
-    incomes: {
-        salary: {
-            day: Date(),
-            value: 250
-        },
-        other: [{
-            day: Date(),
-            value: 15
-        }]
-    },
-    endDate: undefined
-};
-
 function getCategoriesStructure() {
     return {
         categories: [
@@ -82,6 +36,8 @@ function getCurrentStatementPeriod() {
             this.setState({currentStatementPeriod: currentStatementPeriod, loaded: true});
         })
         .catch(error => {
+            // display dialog with message that current statement period could not be returned
+            this.props.onErrorReceived(error);
             console.log('request failed', error)
         });
 }
@@ -112,8 +68,12 @@ export default class HomePageContainer extends React.Component {
 
         fetch(url, Object.assign({body: JSON.stringify(updatedExpenses)}, fetchSettings.postRequest))
             .then((res) => res.json())
+            .then(fetchGlobals.checkStatus)
             .then(updatedStatementPeriod => {
                 this.setState({currentStatementPeriod: updatedStatementPeriod});
+            })
+            .catch(error => {
+                console.log('request failed', error)
             });
     }
 
@@ -136,6 +96,7 @@ export default class HomePageContainer extends React.Component {
                 this.setState({currentStatementPeriod: newStatementPeriod});
             })
             .catch(error => {
+
                 console.log('request failed', error)
             });
     }
