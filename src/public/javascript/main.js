@@ -4,14 +4,35 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import AccountingPeriod from './statementPeriod'
-//import HomePage from './homePage'
 import  HomePageContainer from './containers/homePageContainer'
+import MessageOverlay from './messages/messageOverlay'
 
 class Root extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {show: false, message: ''};
+    }
+
+    onErrorReceived(error) {
+        this.setState({show: true, message: 'Error occurred'});
+        // call this method when network/http error is received
+    }
+
+    onMessageHidden() {
+        this.setState({show: false});
+    }
+
     render() {
-        //return <StatementPeriod accountingDays={[2, 4, 6]}></StatementPeriod>
-       // return <StatementPeriod></StatementPeriod>
-       return <HomePageContainer></HomePageContainer>
+        return <div>
+            <HomePageContainer
+                onErrorReceived={(error) => this.onErrorReceived(error)}
+            ></HomePageContainer>
+            <MessageOverlay
+                show={this.state.show}
+                message={this.state.message}
+                hideMessage={() => this.onMessageHidden()}
+            ></MessageOverlay>
+        </div>
     }
 }
 
