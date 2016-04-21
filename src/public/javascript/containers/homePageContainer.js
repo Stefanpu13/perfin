@@ -27,27 +27,6 @@ function getCategoriesStructure() {
     }
 }
 
-function getCurrentStatementPeriod() {
-
-    fetch('http://localhost:3000/api/monthlyStatementPeriod/getCurrent')
-        .then(fetchGlobals.checkStatus)
-        .then(res => res.json())
-        .then((currentStatementPeriod) => {
-            this.setState({
-                getCurrentStatementHasError: false,
-                currentStatementPeriod: currentStatementPeriod,
-                loaded: true
-            });
-        })
-        .catch(error => {
-            // display dialog with message that current statement period could not be returned
-            this.setState({getCurrentStatementHasError: true, loaded: true});
-            error.message = "Could not load current statement period.";
-            this.props.onErrorReceived(error);
-            console.log('request failed', error)
-        });
-}
-
 function updateExpenses(newExpensesValue, oldExpenses, category, subcategory) {
     oldExpenses[category] = oldExpenses[category] || {};
     oldExpenses[category][subcategory] = Number(newExpensesValue);
@@ -68,13 +47,46 @@ export default class HomePageContainer extends React.Component {
     }
 
     componentDidMount() {
-        getCurrentStatementPeriod.apply(this);
+        //getCurrentStatementPeriod.apply(this);
+        this.getCurrentStatementPeriod();
     }
 
     onEditExpense(statementPeriodDay, newExpensesValue, category, subcategory) {
         var oldExpenses = JSON.parse(JSON.stringify(statementPeriodDay.expenses || {}));
 
         var updatedExpenses = updateExpenses(newExpensesValue, oldExpenses, category, subcategory);
+
+        this.updateStatementPeriod(statementPeriodDay, updatedExpenses);
+    }
+
+    onAddExpense(statementPeriodDay, addedExpensesValue, category, subcategory) {
+        var oldExpenses = JSON.parse(JSON.stringify(statementPeriodDay.expenses || {}));
+        var updatedExpenses = addExpenses(addedExpensesValue, oldExpenses, category, subcategory);
+
+        this.updateStatementPeriod(statementPeriodDay, updatedExpenses);
+    }
+
+    getCurrentStatementPeriod (){
+        fetch('http://localhost:3000/api/monthlyStatementPeriod/getCurrent')
+            .then(fetchGlobals.checkStatus)
+            .then(res => res.json())
+            .then((currentStatementPeriod) => {
+                this.setState({
+                    getCurrentStatementHasError: false,
+                    currentStatementPeriod: currentStatementPeriod,
+                    loaded: true
+                });
+            })
+            .catch(error => {
+                // display dialog with message that current statement period could not be returned
+                this.setState({getCurrentStatementHasError: true, loaded: true});
+                error.message = "Could not load current statement period.";
+                this.props.onErrorReceived(error);
+                console.log('request failed', error)
+            });
+    }
+
+    updateStatementPeriod(statementPeriodDay, updatedExpenses){
 
         var url = 'http://localhost:3000/api/monthlyStatementPeriod/update/' +
             this.state.currentStatementPeriod._id + '/' + statementPeriodDay._id;
@@ -91,12 +103,6 @@ export default class HomePageContainer extends React.Component {
                 this.props.onErrorReceived(error);
                 console.log('request failed', error)
             });
-    }
-
-    onAddExpense(statementPeriodDay, addedExpensesValue, category, subcategory) {
-        var oldExpenses = JSON.parse(JSON.stringify(statementPeriodDay.expenses || {}));
-
-        var updatedExpenses = addExpenses(addedExpensesValue, oldExpenses, category, subcategory);
     }
 
     onCreateNewStatementPeriod(periodFirstDay) {

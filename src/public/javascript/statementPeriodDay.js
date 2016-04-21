@@ -5,7 +5,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import moment from 'moment'
 
-export default class AccountingDay extends React.Component {
+export default class StatementPeriodDay extends React.Component {
     constructor(props) {
         super(props);
     }

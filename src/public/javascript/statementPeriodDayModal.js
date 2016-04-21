@@ -7,12 +7,13 @@ import { Input } from 'react-bootstrap'
 import {Button} from 'react-bootstrap'
 import {Modal} from 'react-bootstrap'
 import {Col} from  'react-bootstrap'
+import StatementPeriodDayModalDropdown from './statementPeriodDayModalDropdown'
 
 function isValidExpensesValue(input) {
     return input !== null && isNaN(+input) === false && input >= 0;
 }
 
-export default class AccountingDayModal extends React.Component {
+export default class StatementPeriodDayModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {currentDailyExpenses: undefined, expensesInputStyle: 'success'};
@@ -21,12 +22,6 @@ export default class AccountingDayModal extends React.Component {
     componentWillReceiveProps(newProps) {
         this.setState({currentDailyExpenses: newProps.currentDailyExpenses, expensesInputStyle: 'success'});
     }
-
-    //componentDidUpdate() {
-    //    if(this.refs && this.refs.currentValueInput) {
-    //        this.refs.currentValueInput.getInputDOMNode().focus()
-    //    }
-    //}
 
     changeExpensesValue(event) {
         var expensesStyle = isValidExpensesValue(event.target.value) ? 'success' : 'error';
@@ -37,7 +32,6 @@ export default class AccountingDayModal extends React.Component {
         var disabled = this.state.expensesInputStyle !== 'success' ? true : false;
         return disabled;
     }
-
 
     onClose() {
         this.props.onClose();
@@ -64,6 +58,10 @@ export default class AccountingDayModal extends React.Component {
                                onChange={(event) => this.changeExpensesValue(event)}
                                bsStyle={this.state.expensesInputStyle}
                                hasFeedback/>
+                        <StatementPeriodDayModalDropdown showSubcategoryInput={this.props.showSubcategoryInput}
+                                                         category={this.props.category}>
+                        </StatementPeriodDayModalDropdown>
+
 
                         <Button type="submit" disabled={this.isSubmitButtonDisabled()}>
                             <span className="glyphicon glyphicon-ok"></span>

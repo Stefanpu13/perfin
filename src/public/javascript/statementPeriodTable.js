@@ -7,7 +7,7 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import AccountingDay from './accountingDay'
+import StatementPeriodDay from './statementPeriodDay'
 import {Table} from 'react-bootstrap'
 
 function getCategoryExpensesTotal(expenses, expensesCategory, expensesSubcategory) {
@@ -55,7 +55,7 @@ class StatementPeriodTable extends React.Component {
                                 getCategoryExpensesTotal(statementPeriodDay.expenses, this.props.expensesCategory,
                                     this.props.expensesSubcategory);
 
-                            return <AccountingDay
+                            return <StatementPeriodDay
                                 total={total}
                                 day={statementPeriodDay.day}
                                 showEditButtonRow={this.state.showEditButtonRow}
@@ -63,7 +63,7 @@ class StatementPeriodTable extends React.Component {
                                 onAddExpense={() => this.props.onAddExpense(statementPeriodDay)}
                                 key={i}
                             >
-                            </AccountingDay>
+                            </StatementPeriodDay>
                         })
                     }
                     </tbody>

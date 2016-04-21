@@ -3,7 +3,6 @@
  */
 import React from 'react'
 import ReactDOM from 'react-dom'
-import AccountingPeriod from './statementPeriod'
 import  HomePageContainer from './containers/homePageContainer'
 import MessageOverlay from './messages/messageOverlay'
 
