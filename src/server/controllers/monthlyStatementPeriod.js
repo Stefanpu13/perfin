@@ -41,6 +41,8 @@ router.post('/update/:statementPeriodId/:statementPeriodDayId', (req, res) => {
         $set: {'statementPeriodDays.$.expenses': newExpenses}
     };
 
+   // res.status(500).end('Error Occurred');
+
     StatementPeriodModel.findOneAndUpdate(query, updateOptions, {new: true},
         (err, updatedPeriod) => {
             if (err) {

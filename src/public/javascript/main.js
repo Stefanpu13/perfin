@@ -25,13 +25,13 @@ class Root extends React.Component {
     render() {
         return <div>
             <HomePageContainer
-                onErrorReceived={(error) => this.onErrorReceived(error)}
-            ></HomePageContainer>
+                onErrorReceived={(error) => this.onErrorReceived(error)}>
+            </HomePageContainer>
             <MessageOverlay
                 show={this.state.show}
                 message={this.state.message}
-                hideMessage={() => this.onMessageHidden()}
-            ></MessageOverlay>
+                hideMessage={() => this.onMessageHidden()}>
+            </MessageOverlay>
         </div>
     }
 }
