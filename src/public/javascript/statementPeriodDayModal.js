@@ -24,12 +24,6 @@ export default class AccountingDayModal extends React.Component {
         this.setState({currentDailyExpenses: newProps.currentDailyExpenses, expensesInputStyle: 'success'});
     }
 
-    //componentDidUpdate() {
-    //    if(this.refs && this.refs.currentValueInput) {
-    //        this.refs.currentValueInput.getInputDOMNode().focus()
-    //    }
-    //}
-
     changeExpensesValue(event) {
         var expensesStyle = isValidExpensesValue(event.target.value) ? 'success' : 'error';
         this.setState({currentDailyExpenses: event.target.value, expensesInputStyle: expensesStyle});
@@ -39,7 +33,6 @@ export default class AccountingDayModal extends React.Component {
         var disabled = this.state.expensesInputStyle !== 'success' ? true : false;
         return disabled;
     }
-
 
     onClose() {
         this.props.onClose();
@@ -55,7 +48,7 @@ export default class AccountingDayModal extends React.Component {
 
 
     render() {
-        var displayStyle = this.props.showSubcategoryInput?
+        var displayStyle = this.props.showSubcategoryInput ?
             '' : 'none';
         var styles = {display: displayStyle};
 
@@ -71,11 +64,15 @@ export default class AccountingDayModal extends React.Component {
                                bsStyle={this.state.expensesInputStyle}
                                hasFeedback/>
                         <DropdownButton style={styles} title={"H"} key={11} id={`dropdown-basic-${11}`}>
-                            <MenuItem eventKey="1">Action</MenuItem>
-                            <MenuItem eventKey="2">Another action</MenuItem>
-                            <MenuItem eventKey="3" active>Active Item</MenuItem>
-                            <MenuItem divider />
-                            <MenuItem eventKey="4">Separated link</MenuItem>
+                            {
+                                this.props.category ? this.props.category.subcategories
+                                    .map((subcategory) => {
+                                        return <MenuItem eventKey={subcategory}
+                                                         key={subcategory}
+                                                         active ={}
+                                        >{subcategory}</MenuItem>
+                                    }) : ''
+                            }
                         </DropdownButton>
 
                         <Button type="submit" disabled={this.isSubmitButtonDisabled()}>

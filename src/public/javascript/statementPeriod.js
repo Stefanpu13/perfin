@@ -6,14 +6,14 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import {Tabs} from 'react-bootstrap'
 import {Tab} from 'react-bootstrap'
-import  AccountingDayModal  from './accountingDayModal'
+import  AccountingDayModal  from './statementPeriodDayModal'
 import StatementPeriodTable from './statementPeriodTable'
 
 export default class StatementPeriod extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeCategory: 'monthly totals',
+            activeCategoryName: 'monthly totals',
             activeSubcategory: 'none',
             currentDailyExpenses: 0,
             showModal: false
@@ -30,7 +30,7 @@ export default class StatementPeriod extends React.Component {
 
     onUpdateDailyExpenses(newDailyExpenses, index) {
         //TODO: change value of expenses for given day, category and subcategory in 'homePageContainer'
-        let activeCategory = this.state.activeCategory;
+        let activeCategory = this.state.activeCategoryName;
         let activeSubcategory = this.state.activeSubcategory.split(' ')[1];
 
         this.setState({showModal: false});
@@ -38,7 +38,7 @@ export default class StatementPeriod extends React.Component {
     }
 
     onAddDailyExpenses(addedDailyExpenses) {
-        let activeCategory = this.state.activeCategory;
+        let activeCategory = this.state.activeCategoryName;
         let activeSubcategory = this.state.activeSubcategory.split(' ')[1];
 
         this.setState({showModal: false});
@@ -47,7 +47,7 @@ export default class StatementPeriod extends React.Component {
 
     onCategorySelect(eventKey) {
         this.setState({
-            activeCategory: eventKey,
+            activeCategoryName: eventKey,
             activeSubcategory: eventKey + ' totals'
         });
     }
@@ -57,7 +57,7 @@ export default class StatementPeriod extends React.Component {
     }
 
     onEditExpense(statementPeriodDay) {
-        let activeCategory = this.state.activeCategory;
+        let activeCategory = this.state.activeCategoryName;
         let activeSubcategory = this.state.activeSubcategory.split(' ')[1];
         let currentDailyExpenses =
             statementPeriodDay.expenses &&
@@ -70,7 +70,7 @@ export default class StatementPeriod extends React.Component {
             statementPeriodDay: statementPeriodDay,
             // state becomes "this" when fn is called like 'this.state.fn()'.
             // but this must be the component
-            showSubcategoryInput:false,
+            showSubcategoryInput: false,
             changeDailyExpenses: this.onUpdateDailyExpenses.bind(this)
         });
     }
@@ -83,7 +83,7 @@ export default class StatementPeriod extends React.Component {
             showModal: true,
             currentDailyExpenses: 0,
             statementPeriodDay: statementPeriodDay,
-            showSubcategoryInput:showSubcategoryInput,
+            showSubcategoryInput: showSubcategoryInput,
             changeDailyExpenses: this.onAddDailyExpenses.bind(this)
         })
     }
@@ -94,7 +94,7 @@ export default class StatementPeriod extends React.Component {
                   onSelect={ eventKey => this.onSubcategorySelect(eventKey)}
             >
                 {
-                    category.name === this.state.activeCategory ?
+                    category.name === this.state.activeCategoryName ?
                         category.subcategories
                             .map(this.renderSubcategory.bind(this, category, categoryIndex)) : ''
                 }
@@ -103,7 +103,7 @@ export default class StatementPeriod extends React.Component {
     }
 
     renderSubcategory(category, categoryIndex, subCategory, subcategoryIndex) {
-        var displayStyle = this.state.activeCategory + ' ' + subCategory === this.state.activeSubcategory ?
+        var displayStyle = this.state.activeCategoryName + ' ' + subCategory === this.state.activeSubcategory ?
             '' : 'none';
         var styles = {display: displayStyle};
 
@@ -131,7 +131,7 @@ export default class StatementPeriod extends React.Component {
             if (StatementPeriod.exists(this.props.currentStatementPeriod)) {
                 statementPeriodContent =
                     <div>
-                        <Tabs activeKey={this.state.activeCategory}
+                        <Tabs activeKey={this.state.activeCategoryName}
                               onSelect={eventKey =>this.onCategorySelect(eventKey)}>
                             <Tab eventKey={'monthly totals'} title="Monthly Totals">
                                 Render monthly totals here
@@ -148,6 +148,9 @@ export default class StatementPeriod extends React.Component {
                                     this.state.changeDailyExpenses(newDailyExpenses)
                                 }
                             }
+                            category={this.props.categoryTree.categories.find( category =>{
+                                return category.name === this.state.activeCategoryName;
+                            })}
                             showSubcategoryInput={this.state.showSubcategoryInput}
                             currentDailyExpenses={this.state.currentDailyExpenses}
                         >
