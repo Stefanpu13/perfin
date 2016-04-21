@@ -70,15 +70,20 @@ export default class StatementPeriod extends React.Component {
             statementPeriodDay: statementPeriodDay,
             // state becomes "this" when fn is called like 'this.state.fn()'.
             // but this must be the component
+            showSubcategoryInput:false,
             changeDailyExpenses: this.onUpdateDailyExpenses.bind(this)
         });
     }
 
     onAddExpense(statementPeriodDay) {
+        let activeSubcategory = this.state.activeSubcategory.split(' ')[1];
+        let showSubcategoryInput = (activeSubcategory === 'totals');
+
         this.setState({
             showModal: true,
             currentDailyExpenses: 0,
             statementPeriodDay: statementPeriodDay,
+            showSubcategoryInput:showSubcategoryInput,
             changeDailyExpenses: this.onAddDailyExpenses.bind(this)
         })
     }
@@ -143,7 +148,7 @@ export default class StatementPeriod extends React.Component {
                                     this.state.changeDailyExpenses(newDailyExpenses)
                                 }
                             }
-
+                            showSubcategoryInput={this.state.showSubcategoryInput}
                             currentDailyExpenses={this.state.currentDailyExpenses}
                         >
                         </AccountingDayModal>
@@ -163,5 +168,3 @@ export default class StatementPeriod extends React.Component {
         );
     }
 }
-
-//export default StatementPeriod

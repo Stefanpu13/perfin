@@ -7,6 +7,8 @@ import { Input } from 'react-bootstrap'
 import {Button} from 'react-bootstrap'
 import {Modal} from 'react-bootstrap'
 import {Col} from  'react-bootstrap'
+import {DropdownButton} from 'react-bootstrap'
+import {MenuItem} from 'react-bootstrap'
 
 function isValidExpensesValue(input) {
     return input !== null && isNaN(+input) === false && input >= 0;
@@ -53,6 +55,10 @@ export default class AccountingDayModal extends React.Component {
 
 
     render() {
+        var displayStyle = this.props.showSubcategoryInput?
+            '' : 'none';
+        var styles = {display: displayStyle};
+
         return (
             <Modal
                 show={this.props.showModal}
@@ -64,6 +70,13 @@ export default class AccountingDayModal extends React.Component {
                                onChange={(event) => this.changeExpensesValue(event)}
                                bsStyle={this.state.expensesInputStyle}
                                hasFeedback/>
+                        <DropdownButton style={styles} title={"H"} key={11} id={`dropdown-basic-${11}`}>
+                            <MenuItem eventKey="1">Action</MenuItem>
+                            <MenuItem eventKey="2">Another action</MenuItem>
+                            <MenuItem eventKey="3" active>Active Item</MenuItem>
+                            <MenuItem divider />
+                            <MenuItem eventKey="4">Separated link</MenuItem>
+                        </DropdownButton>
 
                         <Button type="submit" disabled={this.isSubmitButtonDisabled()}>
                             <span className="glyphicon glyphicon-ok"></span>
