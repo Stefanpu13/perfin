@@ -12,7 +12,8 @@ let createDaysForCurrentPeriod = (lastDayInPeriodDate) => {
 
     let statementPeriodDays = [];
     // 'format' is used to remove 'time' component. This avoids rounding to lower value of 'diff'
-    let maxDaysToAdd = moment().diff(moment(lastDayInPeriodDate).format("MM-DD-YYYY"), 'days');
+    // "toDate" is used to fix error in moment
+    let maxDaysToAdd = moment().diff(moment(lastDayInPeriodDate).format("MM-DD-YYYY").toDate(), 'days');
 
     for (let daysToAdd = 1; daysToAdd <= maxDaysToAdd; daysToAdd++) {
         let newStatementPeriodDay = {
