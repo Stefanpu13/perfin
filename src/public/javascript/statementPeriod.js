@@ -9,7 +9,7 @@ import {Tab} from 'react-bootstrap'
 import  AccountingDayModal  from './accountingDayModal'
 import StatementPeriodTable from './statementPeriodTable'
 
-class StatementPeriod extends React.Component {
+export default class StatementPeriod extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -75,9 +75,6 @@ class StatementPeriod extends React.Component {
     }
 
     onAddExpense(statementPeriodDay) {
-        let activeCategory = this.state.activeCategory;
-        let activeSubcategory = this.state.activeSubcategory.split(' ')[1];
-
         this.setState({
             showModal: true,
             currentDailyExpenses: 0,
@@ -167,4 +164,4 @@ class StatementPeriod extends React.Component {
     }
 }
 
-export default StatementPeriod
+//export default StatementPeriod
