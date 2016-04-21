@@ -40,7 +40,8 @@ export default class AccountingDay extends React.Component {
                 }
                 {/*Add new value*/}
                 <td className="col-xs-1">
-                    <div className="text-center">
+                    <div className="text-center"
+                         onClick={() => this.props.onAddExpense()}>
                         <span className="glyphicon glyphicon-plus text-center"></span>
                     </div>
                 </td>

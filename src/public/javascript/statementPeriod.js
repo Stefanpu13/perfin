@@ -37,6 +37,14 @@ class StatementPeriod extends React.Component {
         this.props.onEditExpense(this.state.statementPeriodDay, newDailyExpenses, activeCategory, activeSubcategory)
     }
 
+    onAddDailyExpenses(addedDailyExpenses) {
+        let activeCategory = this.state.activeCategory;
+        let activeSubcategory = this.state.activeSubcategory.split(' ')[1];
+
+        this.setState({showModal: false});
+        this.props.onAddExpense(this.state.statementPeriodDay, addedDailyExpenses, activeCategory, activeSubcategory)
+    }
+
     onCategorySelect(eventKey) {
         this.setState({
             activeCategory: eventKey,
@@ -59,8 +67,23 @@ class StatementPeriod extends React.Component {
         this.setState({
             showModal: true,
             currentDailyExpenses: currentDailyExpenses || 0,
-            statementPeriodDay: statementPeriodDay
+            statementPeriodDay: statementPeriodDay,
+            // state becomes "this" when fn is called like 'this.state.fn()'.
+            // but this must be the component
+            changeDailyExpenses: this.onUpdateDailyExpenses.bind(this)
         });
+    }
+
+    onAddExpense(statementPeriodDay) {
+        let activeCategory = this.state.activeCategory;
+        let activeSubcategory = this.state.activeSubcategory.split(' ')[1];
+
+        this.setState({
+            showModal: true,
+            currentDailyExpenses: 0,
+            statementPeriodDay: statementPeriodDay,
+            changeDailyExpenses: this.onAddDailyExpenses.bind(this)
+        })
     }
 
     renderCategory(category, categoryIndex) {
@@ -91,6 +114,7 @@ class StatementPeriod extends React.Component {
                                       expensesCategory={category.name}
                                       expensesSubcategory={subCategory}
                                       onEditExpense={(statementPeriodDay)=>this.onEditExpense(statementPeriodDay)}
+                                      onAddExpense={(statementPeriodDay) => this.onAddExpense(statementPeriodDay)}
                 >
                 </StatementPeriodTable>
             }
@@ -118,9 +142,11 @@ class StatementPeriod extends React.Component {
                         <AccountingDayModal
                             showModal={this.state.showModal}
                             onClose={()=> this.close()}
-                            onUpdateDailyExpenses={(newDailyExpenses) => {
-                        this.onUpdateDailyExpenses(newDailyExpenses, this.state.dayIndex)}
-                        }
+                            changeDailyExpenses={(newDailyExpenses) => {
+                                    this.state.changeDailyExpenses(newDailyExpenses)
+                                }
+                            }
+
                             currentDailyExpenses={this.state.currentDailyExpenses}
                         >
                         </AccountingDayModal>

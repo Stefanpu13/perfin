@@ -33,11 +33,11 @@ export default class AccountingDayModal extends React.Component {
         this.setState({currentDailyExpenses: event.target.value, expensesInputStyle: expensesStyle});
     }
 
-
     isSubmitButtonDisabled() {
         var disabled = this.state.expensesInputStyle !== 'success' ? true : false;
         return disabled;
     }
+
 
     onClose() {
         this.props.onClose();
@@ -45,7 +45,7 @@ export default class AccountingDayModal extends React.Component {
 
     onFormSubmit(event) {
         if (isValidExpensesValue(this.state.currentDailyExpenses)) {
-            this.props.onUpdateDailyExpenses(this.state.currentDailyExpenses);
+            this.props.changeDailyExpenses(this.state.currentDailyExpenses);
         }
 
         event.preventDefault();

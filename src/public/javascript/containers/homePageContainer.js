@@ -34,9 +34,10 @@ function getCurrentStatementPeriod() {
         .then(res => res.json())
         .then((currentStatementPeriod) => {
             this.setState({
-                getCurrentStatementHasError:false,
+                getCurrentStatementHasError: false,
                 currentStatementPeriod: currentStatementPeriod,
-                loaded: true});
+                loaded: true
+            });
         })
         .catch(error => {
             // display dialog with message that current statement period could not be returned
@@ -50,6 +51,13 @@ function getCurrentStatementPeriod() {
 function updateExpenses(newExpensesValue, oldExpenses, category, subcategory) {
     oldExpenses[category] = oldExpenses[category] || {};
     oldExpenses[category][subcategory] = Number(newExpensesValue);
+    return oldExpenses;
+}
+
+function addExpenses(addedExpensesValue, oldExpenses, category, subcategory) {
+    oldExpenses[category] = oldExpenses[category] || {};
+    let subcategoryValue = Number(oldExpenses[category][subcategory]) || 0;
+    oldExpenses[category][subcategory] = subcategoryValue + Number(addedExpensesValue);
     return oldExpenses;
 }
 
@@ -85,6 +93,12 @@ export default class HomePageContainer extends React.Component {
             });
     }
 
+    onAddExpense(statementPeriodDay, addedExpensesValue, category, subcategory) {
+        var oldExpenses = JSON.parse(JSON.stringify(statementPeriodDay.expenses || {}));
+
+        var updatedExpenses = addExpenses(addedExpensesValue, oldExpenses, category, subcategory);
+    }
+
     onCreateNewStatementPeriod(periodFirstDay) {
         // check if start Date is defined and valid
         if (!periodFirstDay) {
@@ -116,6 +130,8 @@ export default class HomePageContainer extends React.Component {
                       getCurrentStatementHasError={this.state.getCurrentStatementHasError}
                       onEditExpense={(statementPeriodDay,newExpenses,  category, subcategory) =>
                       this.onEditExpense(statementPeriodDay, newExpenses,  category, subcategory)}
+                      onAddExpense={(statementPeriodDay,newExpenses,  category, subcategory) =>
+                      this.onAddExpense(statementPeriodDay,newExpenses,  category, subcategory)}
                       onCreateNewStatementPeriod={(periodFirstDay) => this.onCreateNewStatementPeriod(periodFirstDay)}
             >
             </HomePage>

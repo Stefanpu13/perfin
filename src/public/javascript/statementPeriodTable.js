@@ -60,6 +60,7 @@ class StatementPeriodTable extends React.Component {
                                 day={statementPeriodDay.day}
                                 showEditButtonRow={this.state.showEditButtonRow}
                                 onEditExpense={() => this.props.onEditExpense(statementPeriodDay)}
+                                onAddExpense={() => this.props.onAddExpense(statementPeriodDay)}
                                 key={i}
                             >
                             </AccountingDay>
