@@ -7,14 +7,13 @@ import { Input } from 'react-bootstrap'
 import {Button} from 'react-bootstrap'
 import {Modal} from 'react-bootstrap'
 import {Col} from  'react-bootstrap'
-import {DropdownButton} from 'react-bootstrap'
-import {MenuItem} from 'react-bootstrap'
+import StatementPeriodDayModalDropdown from './statementPeriodDayModalDropdown'
 
 function isValidExpensesValue(input) {
     return input !== null && isNaN(+input) === false && input >= 0;
 }
 
-export default class AccountingDayModal extends React.Component {
+export default class StatementPeriodDayModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {currentDailyExpenses: undefined, expensesInputStyle: 'success'};
@@ -48,10 +47,6 @@ export default class AccountingDayModal extends React.Component {
 
 
     render() {
-        var displayStyle = this.props.showSubcategoryInput ?
-            '' : 'none';
-        var styles = {display: displayStyle};
-
         return (
             <Modal
                 show={this.props.showModal}
@@ -63,17 +58,10 @@ export default class AccountingDayModal extends React.Component {
                                onChange={(event) => this.changeExpensesValue(event)}
                                bsStyle={this.state.expensesInputStyle}
                                hasFeedback/>
-                        <DropdownButton style={styles} title={"H"} key={11} id={`dropdown-basic-${11}`}>
-                            {
-                                this.props.category ? this.props.category.subcategories
-                                    .map((subcategory) => {
-                                        return <MenuItem eventKey={subcategory}
-                                                         key={subcategory}
-                                                         active ={}
-                                        >{subcategory}</MenuItem>
-                                    }) : ''
-                            }
-                        </DropdownButton>
+                        <StatementPeriodDayModalDropdown showSubcategoryInput={this.props.showSubcategoryInput}
+                                                         category={this.props.category}>
+                        </StatementPeriodDayModalDropdown>
+
 
                         <Button type="submit" disabled={this.isSubmitButtonDisabled()}>
                             <span className="glyphicon glyphicon-ok"></span>
