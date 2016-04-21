@@ -6,7 +6,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import {Tabs} from 'react-bootstrap'
 import {Tab} from 'react-bootstrap'
-import  AccountingDayModal  from './statementPeriodDayModal'
+import  StatementPeriodDayModal  from './statementPeriodDayModal'
 import StatementPeriodTable from './statementPeriodTable'
 
 export default class StatementPeriod extends React.Component {
@@ -141,7 +141,7 @@ export default class StatementPeriod extends React.Component {
                                     .map((category, i) =>this.renderCategory(category, i))
                             }
                         </Tabs>
-                        <AccountingDayModal
+                        <StatementPeriodDayModal
                             showModal={this.state.showModal}
                             onClose={()=> this.close()}
                             changeDailyExpenses={(newDailyExpenses) => {
@@ -154,7 +154,7 @@ export default class StatementPeriod extends React.Component {
                             showSubcategoryInput={this.state.showSubcategoryInput}
                             currentDailyExpenses={this.state.currentDailyExpenses}
                         >
-                        </AccountingDayModal>
+                        </StatementPeriodDayModal>
                     </div>
             } else {
                 statementPeriodContent =
