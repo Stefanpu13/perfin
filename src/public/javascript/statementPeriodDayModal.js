@@ -16,16 +16,24 @@ function isValidExpensesValue(input) {
 export default class StatementPeriodDayModal extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {currentDailyExpenses: undefined, expensesInputStyle: 'success'};
+        this.state = {
+            currentDailyExpenses: undefined,
+            expensesInputStyle: 'success',
+            selectedSubcategory: 'other'
+        };
     }
 
     componentWillReceiveProps(newProps) {
         this.setState({currentDailyExpenses: newProps.currentDailyExpenses, expensesInputStyle: 'success'});
     }
 
-    changeExpensesValue(event) {
+    onChangeExpensesValue(event) {
         var expensesStyle = isValidExpensesValue(event.target.value) ? 'success' : 'error';
         this.setState({currentDailyExpenses: event.target.value, expensesInputStyle: expensesStyle});
+    }
+
+    onChangeSelectedSubcategory(selectedSubcategory) {
+        this.setState({selectedSubcategory: selectedSubcategory});
     }
 
     isSubmitButtonDisabled() {
@@ -45,7 +53,6 @@ export default class StatementPeriodDayModal extends React.Component {
         event.preventDefault();
     }
 
-
     render() {
         return (
             <Modal
@@ -55,11 +62,15 @@ export default class StatementPeriodDayModal extends React.Component {
                     <form onSubmit={(e) => this.onFormSubmit(e)}>
                         <Input type="text" ref="currentValueInput"
                                value={this.state.currentDailyExpenses}
-                               onChange={(event) => this.changeExpensesValue(event)}
+                               onChange={(event) => this.onChangeExpensesValue(event)}
                                bsStyle={this.state.expensesInputStyle}
                                hasFeedback/>
                         <StatementPeriodDayModalDropdown showSubcategoryInput={this.props.showSubcategoryInput}
-                                                         category={this.props.category}>
+                                                         category={this.props.category}
+                                                         selectedSubcategory={this.state.selectedSubcategory}
+                                                         onChangeSelectedSubcategory=
+                                                             {this.onChangeSelectedSubcategory.bind(this)}
+                        >
                         </StatementPeriodDayModalDropdown>
 
 
