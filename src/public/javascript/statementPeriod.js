@@ -8,6 +8,7 @@ import {Tabs} from 'react-bootstrap'
 import {Tab} from 'react-bootstrap'
 import  StatementPeriodDayModal  from './statementPeriodDayModal'
 import StatementPeriodTable from './statementPeriodTable'
+import expenses from './expenses'
 
 export default class StatementPeriod extends React.Component {
     constructor(props) {
@@ -28,22 +29,18 @@ export default class StatementPeriod extends React.Component {
         this.setState({showModal: false})
     }
 
-    onUpdateDailyExpenses(newDailyExpenses, index) {
-        //TODO: change value of expenses for given day, category and subcategory in 'homePageContainer'
-        let activeCategory = this.state.activeCategoryName;
-        let activeSubcategory = this.state.activeSubcategory.split(' ')[1];
-
-        this.setState({showModal: false});
-        this.props.onEditExpense(this.state.statementPeriodDay, newDailyExpenses, activeCategory, activeSubcategory)
-    }
-
-    onAddDailyExpenses(addedDailyExpenses, selectedSubcategory) {
-        let activeCategory = this.state.activeCategoryName;
+    onChangeDailyExpenses(changeExpensesFn, addedDailyExpenses, selectedSubcategory) {
+        let selectedCategory = this.state.activeCategoryName;
         let activeSubcategory = this.state.activeSubcategory.split(' ')[1];
         let subcategoryAddedTo = (activeSubcategory === 'totals') ? selectedSubcategory : activeSubcategory;
 
         this.setState({showModal: false});
-        this.props.onAddExpense(this.state.statementPeriodDay, addedDailyExpenses, activeCategory, subcategoryAddedTo)
+
+        let oldExpenses = JSON.parse(JSON.stringify(this.state.statementPeriodDay.expenses || {}));
+        let updatedExpenses =
+            changeExpensesFn(addedDailyExpenses, oldExpenses, selectedCategory, subcategoryAddedTo);
+
+        this.props.onChangeExpense(this.state.statementPeriodDay, updatedExpenses);
     }
 
     onCategorySelect(eventKey) {
@@ -72,7 +69,7 @@ export default class StatementPeriod extends React.Component {
             // state becomes "this" when fn is called like 'this.state.fn()'.
             // but the component must be 'this'
             showSubcategoryInput: false,
-            changeDailyExpenses: this.onUpdateDailyExpenses.bind(this)
+            changeDailyExpenses: this.onChangeDailyExpenses.bind(this, expenses.update)
         });
     }
 
@@ -85,7 +82,7 @@ export default class StatementPeriod extends React.Component {
             currentDailyExpenses: 0,
             statementPeriodDay: statementPeriodDay,
             showSubcategoryInput: showSubcategoryInput,
-            changeDailyExpenses: this.onAddDailyExpenses.bind(this)
+            changeDailyExpenses: this.onChangeDailyExpenses.bind(this, expenses.add)
         })
     }
 

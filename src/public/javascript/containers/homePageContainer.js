@@ -27,19 +27,6 @@ function getCategoriesStructure() {
     }
 }
 
-function updateExpenses(newExpensesValue, oldExpenses, category, subcategory) {
-    oldExpenses[category] = oldExpenses[category] || {};
-    oldExpenses[category][subcategory] = Number(newExpensesValue);
-    return oldExpenses;
-}
-
-function addExpenses(addedExpensesValue, oldExpenses, category, subcategory) {
-    oldExpenses[category] = oldExpenses[category] || {};
-    let subcategoryValue = Number(oldExpenses[category][subcategory]) || 0;
-    oldExpenses[category][subcategory] = subcategoryValue + Number(addedExpensesValue);
-    return oldExpenses;
-}
-
 export default class HomePageContainer extends React.Component {
     constructor(props) {
         super(props);
@@ -49,21 +36,6 @@ export default class HomePageContainer extends React.Component {
     componentDidMount() {
         //getCurrentStatementPeriod.apply(this);
         this.getCurrentStatementPeriod();
-    }
-
-    onEditExpense(statementPeriodDay, newExpensesValue, category, subcategory) {
-        var oldExpenses = JSON.parse(JSON.stringify(statementPeriodDay.expenses || {}));
-
-        var updatedExpenses = updateExpenses(newExpensesValue, oldExpenses, category, subcategory);
-
-        this.updateStatementPeriod(statementPeriodDay, updatedExpenses);
-    }
-
-    onAddExpense(statementPeriodDay, addedExpensesValue, category, subcategory) {
-        var oldExpenses = JSON.parse(JSON.stringify(statementPeriodDay.expenses || {}));
-        var updatedExpenses = addExpenses(addedExpensesValue, oldExpenses, category, subcategory);
-
-        this.updateStatementPeriod(statementPeriodDay, updatedExpenses);
     }
 
     getCurrentStatementPeriod() {
@@ -134,10 +106,7 @@ export default class HomePageContainer extends React.Component {
                       categoryTree={getCategoriesStructure()}
                       loaded={this.state.loaded}
                       getCurrentStatementHasError={this.state.getCurrentStatementHasError}
-                      onEditExpense={(statementPeriodDay,newExpenses,  category, subcategory) =>
-                      this.onEditExpense(statementPeriodDay, newExpenses,  category, subcategory)}
-                      onAddExpense={(statementPeriodDay, newExpenses,  category, subcategory) =>
-                      this.onAddExpense(statementPeriodDay, newExpenses,  category, subcategory)}
+                      onChangeExpense ={this.updateStatementPeriod.bind(this)}
                       onCreateNewStatementPeriod={(periodFirstDay) => this.onCreateNewStatementPeriod(periodFirstDay)}
             >
             </HomePage>
