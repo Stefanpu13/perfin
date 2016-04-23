@@ -24,7 +24,11 @@ export default class StatementPeriodDayModal extends React.Component {
     }
 
     componentWillReceiveProps(newProps) {
-        this.setState({currentDailyExpenses: newProps.currentDailyExpenses, expensesInputStyle: 'success'});
+        this.setState({
+            currentDailyExpenses: newProps.currentDailyExpenses,
+            expensesInputStyle: 'success',
+            selectedSubcategory: 'other'
+        });
     }
 
     onChangeExpensesValue(event) {

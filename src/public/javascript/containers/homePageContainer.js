@@ -66,7 +66,7 @@ export default class HomePageContainer extends React.Component {
         this.updateStatementPeriod(statementPeriodDay, updatedExpenses);
     }
 
-    getCurrentStatementPeriod (){
+    getCurrentStatementPeriod() {
         fetch('http://localhost:3000/api/monthlyStatementPeriod/getCurrent')
             .then(fetchGlobals.checkStatus)
             .then(res => res.json())
@@ -86,7 +86,7 @@ export default class HomePageContainer extends React.Component {
             });
     }
 
-    updateStatementPeriod(statementPeriodDay, updatedExpenses){
+    updateStatementPeriod(statementPeriodDay, updatedExpenses) {
 
         var url = 'http://localhost:3000/api/monthlyStatementPeriod/update/' +
             this.state.currentStatementPeriod._id + '/' + statementPeriodDay._id;
@@ -136,8 +136,8 @@ export default class HomePageContainer extends React.Component {
                       getCurrentStatementHasError={this.state.getCurrentStatementHasError}
                       onEditExpense={(statementPeriodDay,newExpenses,  category, subcategory) =>
                       this.onEditExpense(statementPeriodDay, newExpenses,  category, subcategory)}
-                      onAddExpense={(statementPeriodDay,newExpenses,  category, subcategory) =>
-                      this.onAddExpense(statementPeriodDay,newExpenses,  category, subcategory)}
+                      onAddExpense={(statementPeriodDay, newExpenses,  category, subcategory) =>
+                      this.onAddExpense(statementPeriodDay, newExpenses,  category, subcategory)}
                       onCreateNewStatementPeriod={(periodFirstDay) => this.onCreateNewStatementPeriod(periodFirstDay)}
             >
             </HomePage>

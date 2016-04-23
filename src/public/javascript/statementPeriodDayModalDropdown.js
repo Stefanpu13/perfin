@@ -9,14 +9,10 @@ import {MenuItem} from 'react-bootstrap'
 export default class StatementPeriodDayModalDropdown extends React.Component {
     constructor(props) {
         super(props);
-        //this.state = {
-        //    selectedSubcategory: 'other'
-        //};
     }
 
     onDropdownSelect(event, eventKey) {
         this.props.onChangeSelectedSubcategory(eventKey);
-        //this.setState({selectedSubcategory: eventKey});
     }
 
     isNotTotalsCategory(subcategory){

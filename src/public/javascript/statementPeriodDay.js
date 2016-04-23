@@ -30,7 +30,7 @@ export default class StatementPeriodDay extends React.Component {
                     this.props.showEditButtonRow ?
                         <td className="col-xs-1">
                             <div className="text-center"
-                                 onClick={() => this.props.onEditExpense()}
+                                 onClick={() => this.props.onOpenEditExpenseModal()}
                             >
                                 <span className="glyphicon glyphicon-pencil"></span>
                             </div>
@@ -41,7 +41,7 @@ export default class StatementPeriodDay extends React.Component {
                 {/*Add new value*/}
                 <td className="col-xs-1">
                     <div className="text-center"
-                         onClick={() => this.props.onAddExpense()}>
+                         onClick={() => this.props.onOpenAddExpenseModal()}>
                         <span className="glyphicon glyphicon-plus text-center"></span>
                     </div>
                 </td>
