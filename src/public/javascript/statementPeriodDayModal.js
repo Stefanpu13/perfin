@@ -51,7 +51,7 @@ export default class StatementPeriodDayModal extends React.Component {
 
     onFormSubmit(event) {
         if (isValidExpensesValue(this.state.currentDailyExpenses)) {
-            this.props.changeDailyExpenses(this.state.currentDailyExpenses);
+            this.props.changeDailyExpenses(this.state.currentDailyExpenses, this.state.selectedSubcategory);
         }
 
         event.preventDefault();

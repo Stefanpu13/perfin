@@ -37,12 +37,13 @@ export default class StatementPeriod extends React.Component {
         this.props.onEditExpense(this.state.statementPeriodDay, newDailyExpenses, activeCategory, activeSubcategory)
     }
 
-    onAddDailyExpenses(addedDailyExpenses) {
+    onAddDailyExpenses(addedDailyExpenses, selectedSubcategory) {
         let activeCategory = this.state.activeCategoryName;
         let activeSubcategory = this.state.activeSubcategory.split(' ')[1];
+        let subcategoryAddedTo = (activeSubcategory === 'totals') ? selectedSubcategory : activeSubcategory;
 
         this.setState({showModal: false});
-        this.props.onAddExpense(this.state.statementPeriodDay, addedDailyExpenses, activeCategory, activeSubcategory)
+        this.props.onAddExpense(this.state.statementPeriodDay, addedDailyExpenses, activeCategory, subcategoryAddedTo)
     }
 
     onCategorySelect(eventKey) {
@@ -69,7 +70,7 @@ export default class StatementPeriod extends React.Component {
             currentDailyExpenses: currentDailyExpenses || 0,
             statementPeriodDay: statementPeriodDay,
             // state becomes "this" when fn is called like 'this.state.fn()'.
-            // but this must be the component
+            // but the component must be 'this'
             showSubcategoryInput: false,
             changeDailyExpenses: this.onUpdateDailyExpenses.bind(this)
         });
@@ -146,8 +147,8 @@ export default class StatementPeriod extends React.Component {
                         <StatementPeriodDayModal
                             showModal={this.state.showModal}
                             onClose={()=> this.close()}
-                            changeDailyExpenses={(newDailyExpenses) => {
-                                    this.state.changeDailyExpenses(newDailyExpenses)
+                            changeDailyExpenses={(newDailyExpenses, selectedSubcategory) => {
+                                    this.state.changeDailyExpenses(newDailyExpenses, selectedSubcategory)
                                 }
                             }
                             category={this.props.categoryTree.categories.find( category =>{
