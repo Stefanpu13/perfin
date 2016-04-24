@@ -6,6 +6,7 @@
 var express = new require('express');
 var router = express.Router();
 var StatementPeriodModel = new require('../models/statementPeriodModel');
+let scheduler = new require('../statementDayScheduler');
 
 router.get('/', (req, res) => {
     res.end('monthly expenses');
@@ -41,7 +42,7 @@ router.post('/update/:statementPeriodId/:statementPeriodDayId', (req, res) => {
         $set: {'statementPeriodDays.$.expenses': newExpenses}
     };
 
-   // res.status(500).end('Error Occurred');
+    // res.status(500).end('Error Occurred');
 
     StatementPeriodModel.findOneAndUpdate(query, updateOptions, {new: true},
         (err, updatedPeriod) => {
@@ -52,6 +53,16 @@ router.post('/update/:statementPeriodId/:statementPeriodDayId', (req, res) => {
             }
         })
 });
+
+router.get('/hasStatementDayCreationError',
+    scheduler.lastStatementDayCreationFailed,
+    (req, res) =>{
+        if(req.statementDayCreationError){
+            res.status(500).json(req.statementDayCreationError);
+        } else{
+            res.status(200).end();
+        }
+    });
 
 router.get('/getCurrent', (req, res) => {
     StatementPeriodModel.getCurrentStatementPeriod(function (err, statementPeriod) {

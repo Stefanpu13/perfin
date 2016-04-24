@@ -12,8 +12,5 @@ router.use('/api/monthlyStatementPeriod', statementPeriodRouter);
 //    res.end('Main page');
 //});
 
-router.get('/home', function(req, res) {
-    res.send('Hello World!')
-});
 
 module.exports = router;

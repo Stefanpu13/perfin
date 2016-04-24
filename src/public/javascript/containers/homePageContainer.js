@@ -7,6 +7,7 @@ import HomePage from '../homePage'
 import fetchSettings from '../http/fetchSettings'
 import fetchGlobals from '../http/fetchGlobals'
 
+
 function getCategoriesStructure() {
     return {
         categories: [
@@ -34,8 +35,19 @@ export default class HomePageContainer extends React.Component {
     }
 
     componentDidMount() {
-        //getCurrentStatementPeriod.apply(this);
         this.getCurrentStatementPeriod();
+        this.checkForStatementDayCreationError();
+    }
+
+    checkForStatementDayCreationError() {
+        fetch('http://localhost:3000/api/monthlyStatementPeriod/hasStatementDayCreationError')
+            .then(fetchGlobals.checkStatus)
+            .catch(error => {
+                error.response.json().then( err =>{
+                    this.props.onWarningReceived(err);
+                });
+
+            });
     }
 
     getCurrentStatementPeriod() {
@@ -106,7 +118,7 @@ export default class HomePageContainer extends React.Component {
                       categoryTree={getCategoriesStructure()}
                       loaded={this.state.loaded}
                       getCurrentStatementHasError={this.state.getCurrentStatementHasError}
-                      onChangeExpense ={this.updateStatementPeriod.bind(this)}
+                      onChangeExpense={this.updateStatementPeriod.bind(this)}
                       onCreateNewStatementPeriod={(periodFirstDay) => this.onCreateNewStatementPeriod(periodFirstDay)}
             >
             </HomePage>
