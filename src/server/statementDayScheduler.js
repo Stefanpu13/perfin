@@ -29,8 +29,8 @@ let createConsecutiveDaysForCurrentPeriod = (lastDayInPeriodDate) => {
     return statementPeriodDays;
 };
 
-let lastStatementDayCreationFailed = (req, res, next) =>{
-    if(createDaysError){
+let lastStatementDayCreationFailed = (req, res, next) => {
+    if (createDaysError) {
         req.statementDayCreationError = createDaysError;
         createDaysError = null;
     }
@@ -39,7 +39,10 @@ let lastStatementDayCreationFailed = (req, res, next) =>{
 };
 
 let startCreateStatementPeriodDaysTask = () => {
-    nodeScheduler.scheduleJob({hour: moment().hour(), minute: moment().add(1, 'minutes').minute()}, () => {
+    //let scheduleTimeSetting = {hour: moment().hour(), minute: moment().add(1, 'minutes').minute()};
+    let scheduleTimeSetting = {hour: 0, minute: 0}; // set task at beginning of new day(on node server)
+    
+    nodeScheduler.scheduleJob(scheduleTimeSetting, () => {
         // Move this function to middleware that is used on navigation to home page
         StatementPeriodModel.getCurrentStatementPeriod((err, statementPeriod) => {
             if (statementPeriod) {
@@ -56,9 +59,10 @@ let startCreateStatementPeriodDaysTask = () => {
                         if (err) {
                             // TODO: how to prepare message for the user when he opens the app?
                             createDaysError = {
-                                message: "The automatic day insertion failed for "  +
-                            newStatementPeriodDays[newStatementPeriodDays.length -1] +
-                                '. Please, contact an administrator.'};
+                                message: "The automatic day insertion failed for " +
+                                newStatementPeriodDays[newStatementPeriodDays.length - 1] +
+                                '. Please, contact an administrator.'
+                            };
                         }
                     });
                 }
@@ -69,5 +73,5 @@ let startCreateStatementPeriodDaysTask = () => {
 
 module.exports = {
     startCreateStatementPeriodDaysTask: startCreateStatementPeriodDaysTask,
-    lastStatementDayCreationFailed:lastStatementDayCreationFailed
+    lastStatementDayCreationFailed: lastStatementDayCreationFailed
 };
