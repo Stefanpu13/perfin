@@ -43,7 +43,7 @@ export default class HomePageContainer extends React.Component {
         fetch('http://localhost:3000/api/monthlyStatementPeriod/hasStatementDayCreationError')
             .then(fetchGlobals.checkStatus)
             .catch(error => {
-                error.response.json().then( err =>{
+                error.response.json().then(err => {
                     this.props.onWarningReceived(err);
                 });
 
