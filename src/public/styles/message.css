@@ -1,0 +1,27 @@
+.overlay-message{
+    position:fixed;
+    border-radius: 3px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
+    margin-top: 5px;
+    padding: 10px;
+}
+
+.error-message-style{
+    background-color: #ee0a0a;
+    border: 1px solid #8c0202;
+}
+
+.error-message-layout{
+    margin-left: 5px;
+}
+
+.warning-message-style{
+    background-color: #eeaa04;
+    border: 1px solid #8c5a01;
+}
+
+.warning-message-style{
+    margin-right: 5px;
+    left: inherit !important;
+    right: 0px;
+}

@@ -5,16 +5,28 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import  HomePageContainer from './containers/homePageContainer'
 import MessageOverlay from './messages/messageOverlay'
+import 'whatwg-fetch'
 
 class Root extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {show: false, message: ''};
+        this.state = {show: false, message: '', messageClassName: 'error-message-style error-message-layout'};
     }
 
     onErrorReceived(error) {
-        this.setState({show: true, message: error.message});
-        // call this method when network/http error is received
+        this.setState({
+            show: true,
+            message: error.message,
+            messageClassName: 'error-message-style error-message-layout'
+        });
+    }
+
+    onWarningReceived(warning) {
+        this.setState({
+            show: true,
+            message: warning.message,
+            messageClassName: 'warning-message-style warning-message-layout'
+        });
     }
 
     onMessageHidden() {
@@ -24,11 +36,13 @@ class Root extends React.Component {
     render() {
         return <div>
             <HomePageContainer
-                onErrorReceived={(error) => this.onErrorReceived(error)}>
+                onErrorReceived={error => this.onErrorReceived(error)}
+                onWarningReceived={warning => this.onWarningReceived(warning)}>
             </HomePageContainer>
             <MessageOverlay
                 show={this.state.show}
                 message={this.state.message}
+                messageClassName={this.state.messageClassName}
                 hideMessage={() => this.onMessageHidden()}>
             </MessageOverlay>
         </div>
