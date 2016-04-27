@@ -113,6 +113,7 @@ export default class StatementPeriod extends React.Component {
                                           {this.props.currentStatementPeriod.statementPeriodDays}
                                       expensesCategory={category.name}
                                       expensesSubcategory={subCategory}
+                                      onSelectStatementPeriodDay={this.props.onSelectStatementPeriodDay}
                                       onOpenEditExpenseModal=
                                           {(statementPeriodDay)=>this.onOpenEditExpenseModal(statementPeriodDay)}
                                       onOpenAddExpenseModal=

@@ -18,7 +18,8 @@ export default class HomePage extends React.Component {
         super(props);
         this.state = {
             active: 1,
-            createStatementButtonDisabled: true
+            createStatementButtonDisabled: true,
+            selectedStatementPeriodDay: undefined
         };
     }
 
@@ -26,6 +27,27 @@ export default class HomePage extends React.Component {
         this.setState({
             //createStatementButtonDisabled: newProps.currentStatementPeriod !== null
             createStatementButtonDisabled: StatementPeriod.exists(newProps.currentStatementPeriod)
+        });
+    }
+
+    checkCreateStatementPeriodButton(statementPeriodDay) {
+        //buttons is enabled when date is from current period and date is not start date
+        let dayIsInCurrentPeriod = this.props.currentStatementPeriod.statementPeriodDays
+            .some(spd => {
+                return spd._id === statementPeriodDay._id;
+            });
+        let dayIsStartDay =
+            this.props.currentStatementPeriod.statementPeriodDays[0]._id === statementPeriodDay._id;
+
+        let buttonIsDisabled = !dayIsInCurrentPeriod || dayIsStartDay
+        return buttonIsDisabled;
+    }
+
+    onSelectStatementPeriodDay(statementPeriodDay) {
+        let createStatementButtonDisabled = this.checkCreateStatementPeriodButton(statementPeriodDay);
+        this.setState({
+            selectedStatementPeriodDay: statementPeriodDay,
+            createStatementButtonDisabled: createStatementButtonDisabled
         });
     }
 
@@ -39,7 +61,8 @@ export default class HomePage extends React.Component {
                         <Navbar.Form pullRight>
                             <Input type="text" placeholder="Search income statement"/>
                             {' '}
-                            <Button onClick={() => this.props.onCreateNewStatementPeriod()}
+                            <Button onClick={() =>
+                            this.props.onCreateNewStatementPeriod(this.state.selectedStatementPeriodDay)}
                                     disabled={this.state.createStatementButtonDisabled}
                             >Create Statement Period</Button>
                             {' '}
@@ -48,7 +71,9 @@ export default class HomePage extends React.Component {
                     </Navbar.Collapse>
                 </Navbar>
                 <Loader loaded={this.props.loaded}>
-                    <StatementPeriod {...this.props} >
+                    <StatementPeriod {...this.props}
+                        onSelectStatementPeriodDay={this.onSelectStatementPeriodDay.bind(this)}
+                    >
                     </StatementPeriod>
                 </Loader>
             </div>

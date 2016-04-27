@@ -31,7 +31,9 @@ function getCategoriesStructure() {
 export default class HomePageContainer extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {currentStatementPeriod: undefined};
+        this.state = {currentStatementPeriod: undefined,
+            //selectedStatementPeriodDay: undefined
+        };
     }
 
     componentDidMount() {
@@ -70,6 +72,7 @@ export default class HomePageContainer extends React.Component {
             });
     }
 
+
     updateStatementPeriod(statementPeriodDay, updatedExpenses) {
 
         var url = 'http://localhost:3000/api/monthlyStatementPeriod/update/' +
@@ -96,20 +99,22 @@ export default class HomePageContainer extends React.Component {
                 day: new Date()
             }
         } else {
+            let x = 0;
             //validate start date - between the second day of the current period and today
         }
 
-        fetch('http://localhost:3000/api/monthlyStatementPeriod/create',
-            Object.assign({body: JSON.stringify(periodFirstDay)}, fetchSettings.postRequest))
-            .then(fetchGlobals.checkStatus)
-            .then((res) => res.json())
-            .then(newStatementPeriod => {
-                this.setState({currentStatementPeriod: newStatementPeriod});
-            })
-            .catch(error => {
 
-                console.log('request failed', error)
-            });
+        //fetch('http://localhost:3000/api/monthlyStatementPeriod/create',
+        //    Object.assign({body: JSON.stringify(periodFirstDay)}, fetchSettings.postRequest))
+        //    .then(fetchGlobals.checkStatus)
+        //    .then((res) => res.json())
+        //    .then(newStatementPeriod => {
+        //        this.setState({currentStatementPeriod: newStatementPeriod});
+        //    })
+        //    .catch(error => {
+        //
+        //        console.log('request failed', error)
+        //    });
     }
 
     render() {
@@ -119,6 +124,8 @@ export default class HomePageContainer extends React.Component {
                       loaded={this.state.loaded}
                       getCurrentStatementHasError={this.state.getCurrentStatementHasError}
                       onChangeExpense={this.updateStatementPeriod.bind(this)}
+                      //onSelectStatementPeriodDay={(statementPeriodDay) =>
+                      //this.onSelectStatementPeriodDay(statementPeriodDay)}
                       onCreateNewStatementPeriod={(periodFirstDay) => this.onCreateNewStatementPeriod(periodFirstDay)}
             >
             </HomePage>
