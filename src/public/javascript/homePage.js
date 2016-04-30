@@ -39,7 +39,10 @@ export default class HomePage extends React.Component {
         let dayIsStartDay =
             this.props.currentStatementPeriod.statementPeriodDays[0]._id === statementPeriodDay._id;
 
-        let buttonIsDisabled = !dayIsInCurrentPeriod || dayIsStartDay
+        let buttonIsDisabled = !this.props.currentStatementPeriod.isLastPeriod ||
+            !dayIsInCurrentPeriod || dayIsStartDay;
+
+
         return buttonIsDisabled;
     }
 
@@ -57,7 +60,25 @@ export default class HomePage extends React.Component {
             <div>
                 <Navbar>
                     <Navbar.Header> {/*<Nav bsStyle="tabs" activeKey={this.state.active} onSelect={(selectedKey) => this.handleSelect(selectedKey)}> <NavItem eventKey={1}> Home </NavItem> </Nav>*/}
-                        <Navbar.Brand> <a href="#">Home</a> </Navbar.Brand> <Navbar.Toggle /> </Navbar.Header>
+                        <Navbar.Brand> <a href="#">Home</a> </Navbar.Brand> <Navbar.Toggle />
+                    </Navbar.Header>
+                    <Navbar.Form pullLeft>
+                        <Button onClick={() =>
+                        this.props.getPreviousStatementPeriod()}>
+                            <span className="glyphicon glyphicon-arrow-left"></span>
+                            {' '}
+                            <span>Previous</span>
+                        </Button>
+                        {' '}
+                        <Button onClick={() =>
+                        this.props.getNextStatementPeriod()}>
+                            <span>Next</span>
+                            {' '}
+                            <span className="glyphicon glyphicon-arrow-right"></span>
+                        </Button>
+                    </Navbar.Form>
+
+
                     <Navbar.Collapse>
                         <Navbar.Form pullRight>
                             <Input type="text" placeholder="Search income statement"/>
