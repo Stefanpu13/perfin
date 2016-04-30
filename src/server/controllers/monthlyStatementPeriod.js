@@ -17,10 +17,10 @@ router.get('/previous', (req, res) => {
 });
 
 router.post('/create', (req, res) => {
-    var statementPeriodFirstDay = req.body;
+    var statementPeriodDays = req.body;
     var newStatementPeriod = {
-        startDate: statementPeriodFirstDay.day,
-        statementPeriodDays: [statementPeriodFirstDay]
+        startDate: statementPeriodDays[0].day,
+        statementPeriodDays: statementPeriodDays
     };
 
     StatementPeriodModel.createStatementPeriod(newStatementPeriod, (err, statementPeriod) => {
@@ -31,6 +31,62 @@ router.post('/create', (req, res) => {
         }
     });
 });
+
+router.use('/create/fromPeriod/:statementPeriodId', (req, res, next) => {
+    let statementPeriodDays = req.body;
+    let newStatementPeriod = {
+        startDate: statementPeriodDays[0].day,
+        statementPeriodDays: statementPeriodDays
+    };
+
+    StatementPeriodModel.createStatementPeriod(newStatementPeriod, (err, statementPeriod) => {
+        if (err) {
+            res.status(500).end('Error occurred');
+        } else {
+            req.newStatementPeriod = newStatementPeriod;
+            next();
+        }
+    });
+
+    //req.newStatementPeriod = newStatementPeriod;
+    //next();
+});
+
+router.post('/create/fromPeriod/:statementPeriodId', (req, res, next) => {
+    // 1. Create new StatementPeriod with new days
+    // 2. Remove days from statement period with statement period id
+    // 3. Return new statement period
+
+    let statementPeriodId = req.params.statementPeriodId;
+    let periodDaysIds = req.body.map(day => {
+        return day._id;
+    });
+    let query = {_id: statementPeriodId};
+    let updateOptions = {
+        $pull: {statementPeriodDays: {_id: {$in: periodDaysIds}}}
+    };
+    StatementPeriodModel.findOneAndUpdate(query, updateOptions, {new: true}, (err, updatedPeriod) => {
+        if (err) {
+            res.status(500).end('Error occurred');
+        } else {
+            res.status(200).json(req.newStatementPeriod);
+        }
+    });
+
+
+    //res.status(200).json(req.newStatementPeriod);
+
+    //StatementPeriodModel.createStatementPeriod(newStatementPeriod, (err, statementPeriod) => {
+    //    if (err) {
+    //        res.status(500).end('Error occurred');
+    //    } else {
+    //        next(statementPeriod);
+    //    }
+    //});
+
+
+});
+
 
 router.post('/update/:statementPeriodId/:statementPeriodDayId', (req, res) => {
     let statementPeriodId = req.params.statementPeriodId;
@@ -56,10 +112,10 @@ router.post('/update/:statementPeriodId/:statementPeriodDayId', (req, res) => {
 
 router.get('/hasStatementDayCreationError',
     scheduler.lastStatementDayCreationFailed,
-    (req, res) =>{
-        if(req.statementDayCreationError){
+    (req, res) => {
+        if (req.statementDayCreationError) {
             res.status(500).json(req.statementDayCreationError);
-        } else{
+        } else {
             res.status(200).end();
         }
     });

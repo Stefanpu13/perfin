@@ -28,10 +28,20 @@ function getCategoriesStructure() {
     }
 }
 
+var getDaysAfterSelectedDay = (selectedDay, statementPeriodDays) => {
+    var selectedDayIndex = statementPeriodDays.findIndex(day => selectedDay._id === day._id);
+    if (selectedDayIndex > -1) {
+        return statementPeriodDays.slice(selectedDayIndex + 1);
+    } else{
+        return [];
+    }
+};
+
 export default class HomePageContainer extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {currentStatementPeriod: undefined,
+        this.state = {
+            currentStatementPeriod: undefined,
             //selectedStatementPeriodDay: undefined
         };
     }
@@ -93,28 +103,34 @@ export default class HomePageContainer extends React.Component {
     }
 
     onCreateNewStatementPeriod(periodFirstDay) {
+        let periodDays;
         // check if start Date is defined and valid
+        let url = 'http://localhost:3000/api/monthlyStatementPeriod/create';
         if (!periodFirstDay) {
-            periodFirstDay = {
+            periodDays = [{
                 day: new Date()
-            }
+            }];
         } else {
-            let x = 0;
+            let daysAfterSelectedDay =
+                getDaysAfterSelectedDay(periodFirstDay, this.state.currentStatementPeriod.statementPeriodDays);
+            periodDays = [periodFirstDay, ...daysAfterSelectedDay];
+
+            url = url + '/fromPeriod/' + this.state.currentStatementPeriod._id;
             //validate start date - between the second day of the current period and today
         }
 
+        fetch(url,
+            Object.assign({body: JSON.stringify(periodDays)}, fetchSettings.postRequest))
+            .then(fetchGlobals.checkStatus)
+            .then((res) => res.json())
+            .then(newStatementPeriod => {
+                let x = newStatementPeriod;
+                this.setState({currentStatementPeriod: newStatementPeriod});
+            })
+            .catch(error => {
 
-        //fetch('http://localhost:3000/api/monthlyStatementPeriod/create',
-        //    Object.assign({body: JSON.stringify(periodFirstDay)}, fetchSettings.postRequest))
-        //    .then(fetchGlobals.checkStatus)
-        //    .then((res) => res.json())
-        //    .then(newStatementPeriod => {
-        //        this.setState({currentStatementPeriod: newStatementPeriod});
-        //    })
-        //    .catch(error => {
-        //
-        //        console.log('request failed', error)
-        //    });
+                console.log('request failed', error)
+            });
     }
 
     render() {
@@ -124,8 +140,8 @@ export default class HomePageContainer extends React.Component {
                       loaded={this.state.loaded}
                       getCurrentStatementHasError={this.state.getCurrentStatementHasError}
                       onChangeExpense={this.updateStatementPeriod.bind(this)}
-                      //onSelectStatementPeriodDay={(statementPeriodDay) =>
-                      //this.onSelectStatementPeriodDay(statementPeriodDay)}
+                //onSelectStatementPeriodDay={(statementPeriodDay) =>
+                //this.onSelectStatementPeriodDay(statementPeriodDay)}
                       onCreateNewStatementPeriod={(periodFirstDay) => this.onCreateNewStatementPeriod(periodFirstDay)}
             >
             </HomePage>

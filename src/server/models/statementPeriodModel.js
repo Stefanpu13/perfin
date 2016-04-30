@@ -22,7 +22,7 @@ statementPeriodSchema.statics.createStatementPeriod = function (statementPeriod,
 };
 
 statementPeriodSchema.statics.getCurrentStatementPeriod = function (callback) {
-    return this.findOne({}, {}, { sort: { 'created_at' : -1 } }, callback);
+    return this.findOne({}, {}, { sort: { '$natural' : -1 } }, callback);
 };
 
 module.exports = mongoose.model('statementPeriod', statementPeriodSchema);

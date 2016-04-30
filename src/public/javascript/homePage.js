@@ -45,6 +45,7 @@ export default class HomePage extends React.Component {
 
     onSelectStatementPeriodDay(statementPeriodDay) {
         let createStatementButtonDisabled = this.checkCreateStatementPeriodButton(statementPeriodDay);
+
         this.setState({
             selectedStatementPeriodDay: statementPeriodDay,
             createStatementButtonDisabled: createStatementButtonDisabled
