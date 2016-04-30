@@ -32,7 +32,7 @@ var getDaysAfterSelectedDay = (selectedDay, statementPeriodDays) => {
     var selectedDayIndex = statementPeriodDays.findIndex(day => selectedDay._id === day._id);
     if (selectedDayIndex > -1) {
         return statementPeriodDays.slice(selectedDayIndex + 1);
-    } else{
+    } else {
         return [];
     }
 };
@@ -82,6 +82,40 @@ export default class HomePageContainer extends React.Component {
             });
     }
 
+    getPreviousStatementPeriod() {
+        let currentStatementPeriodId = this.state.currentStatementPeriod._id;
+        let url = 'http://localhost:3000/api/monthlyStatementPeriod/getPrevious/' + currentStatementPeriodId;
+
+        this.fetchStatementPeriod(url);
+    }
+
+    getNextStatementPeriod(){
+        let currentStatementPeriodId = this.state.currentStatementPeriod._id;
+        let url = 'http://localhost:3000/api/monthlyStatementPeriod/getNext/' + currentStatementPeriodId;
+
+        this.fetchStatementPeriod(url);
+    }
+
+    fetchStatementPeriod(url){
+        fetch(url)
+            .then(fetchGlobals.checkStatus)
+            .then(res => res.json())
+            .then((currentStatementPeriod) => {
+
+                this.setState({
+                    getCurrentStatementHasError: false,
+                    currentStatementPeriod: currentStatementPeriod || this.state.currentStatementPeriod,
+                    loaded: true
+                });
+            })
+            .catch(error => {
+                // display dialog with message that current statement period could not be returned
+                this.setState({getCurrentStatementHasError: true, loaded: true});
+                error.message = "Could not load current statement period.";
+                this.props.onErrorReceived(error);
+                console.log('request failed', error)
+            });
+    }
 
     updateStatementPeriod(statementPeriodDay, updatedExpenses) {
 
@@ -139,6 +173,8 @@ export default class HomePageContainer extends React.Component {
                       categoryTree={getCategoriesStructure()}
                       loaded={this.state.loaded}
                       getCurrentStatementHasError={this.state.getCurrentStatementHasError}
+                      getPreviousStatementPeriod={this.getPreviousStatementPeriod.bind(this)}
+                      getNextStatementPeriod={this.getNextStatementPeriod.bind(this)}
                       onChangeExpense={this.updateStatementPeriod.bind(this)}
                 //onSelectStatementPeriodDay={(statementPeriodDay) =>
                 //this.onSelectStatementPeriodDay(statementPeriodDay)}

@@ -5,6 +5,7 @@ var mongoose = new require('mongoose');
 var Schema = mongoose.Schema;
 
 var statementPeriodSchema = new Schema({
+    isLastPeriod: Boolean,
     startDate: Date,
     endDate: Date,
     statementPeriodDays: [{
@@ -22,7 +23,15 @@ statementPeriodSchema.statics.createStatementPeriod = function (statementPeriod,
 };
 
 statementPeriodSchema.statics.getCurrentStatementPeriod = function (callback) {
-    return this.findOne({}, {}, { sort: { '$natural' : -1 } }, callback);
+    return this.findOne({}, {}, {sort: {'$natural': -1}}, callback);
+};
+
+statementPeriodSchema.statics.getPreviousPeriod = function(currentPeriodId, callback) {
+    return this.findOne({"_id": {'$lt': currentPeriodId}}).sort({'$natural': -1}).exec(callback);
+};
+
+statementPeriodSchema.statics.getNextPeriod = function(currentPeriodId, callback) {
+    return this.findOne({"_id": {'$gt': currentPeriodId}}).sort({'$natural': 1}).exec(callback);
 };
 
 module.exports = mongoose.model('statementPeriod', statementPeriodSchema);
