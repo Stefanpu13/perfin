@@ -8,6 +8,7 @@ import {Tabs} from 'react-bootstrap'
 import {Tab} from 'react-bootstrap'
 import  StatementPeriodDayModal  from './statementPeriodDayModal'
 import StatementPeriodTable from './statementPeriodTable'
+import  StatementPeriodTotals from './statementPeriodTotals'
 import expenses from './expenses'
 
 export default class StatementPeriod extends React.Component {
@@ -135,7 +136,9 @@ export default class StatementPeriod extends React.Component {
                         <Tabs activeKey={this.state.activeCategoryName}
                               onSelect={eventKey =>this.onCategorySelect(eventKey)}>
                             <Tab eventKey={'monthly totals'} title="Monthly Totals">
-                                Render monthly totals here
+                                <StatementPeriodTotals
+                                    displayedStatementPeriod={this.props.displayedStatementPeriod}>
+                                </StatementPeriodTotals>
                             </Tab>
                             {
                                 this.props.categoryTree.categories
