@@ -110,7 +110,7 @@ export default class StatementPeriod extends React.Component {
             {
                 <StatementPeriodTable style={styles}
                                       statementPeriodDays=
-                                          {this.props.currentStatementPeriod.statementPeriodDays}
+                                          {this.props.displayedStatementPeriod.statementPeriodDays}
                                       expensesCategory={category.name}
                                       expensesSubcategory={subCategory}
                                       onSelectStatementPeriodDay={this.props.onSelectStatementPeriodDay}
@@ -126,10 +126,10 @@ export default class StatementPeriod extends React.Component {
 
     render() {
         let statementPeriodContent;
-        if (this.props.getCurrentStatementHasError) {
+        if (this.props.getCurrentStatementPeriodHasError) {
             statementPeriodContent = '';
         } else {
-            if (StatementPeriod.exists(this.props.currentStatementPeriod)) {
+            if (StatementPeriod.exists(this.props.displayedStatementPeriod)) {
                 statementPeriodContent =
                     <div>
                         <Tabs activeKey={this.state.activeCategoryName}

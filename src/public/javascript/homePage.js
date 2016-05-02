@@ -25,21 +25,21 @@ export default class HomePage extends React.Component {
 
     componentWillReceiveProps(newProps) {
         this.setState({
-            //createStatementButtonDisabled: newProps.currentStatementPeriod !== null
-            createStatementButtonDisabled: StatementPeriod.exists(newProps.currentStatementPeriod)
+            //createStatementButtonDisabled: newProps.displayedStatementPeriod !== null
+            createStatementButtonDisabled: StatementPeriod.exists(newProps.displayedStatementPeriod)
         });
     }
 
     checkCreateStatementPeriodButton(statementPeriodDay) {
         //buttons is enabled when date is from current period and date is not start date
-        let dayIsInCurrentPeriod = this.props.currentStatementPeriod.statementPeriodDays
+        let dayIsInCurrentPeriod = this.props.displayedStatementPeriod.statementPeriodDays
             .some(spd => {
                 return spd._id === statementPeriodDay._id;
             });
         let dayIsStartDay =
-            this.props.currentStatementPeriod.statementPeriodDays[0]._id === statementPeriodDay._id;
+            this.props.displayedStatementPeriod.statementPeriodDays[0]._id === statementPeriodDay._id;
 
-        let buttonIsDisabled = !this.props.currentStatementPeriod.isLastPeriod ||
+        let buttonIsDisabled = !this.props.displayedStatementPeriod.isLastPeriod ||
             !dayIsInCurrentPeriod || dayIsStartDay;
 
 

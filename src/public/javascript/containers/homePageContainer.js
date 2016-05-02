@@ -41,7 +41,7 @@ export default class HomePageContainer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentStatementPeriod: undefined,
+            displayedStatementPeriod: undefined,
             //selectedStatementPeriodDay: undefined
         };
     }
@@ -66,16 +66,16 @@ export default class HomePageContainer extends React.Component {
         fetch('http://localhost:3000/api/monthlyStatementPeriod/getCurrent')
             .then(fetchGlobals.checkStatus)
             .then(res => res.json())
-            .then((currentStatementPeriod) => {
+            .then((displayedStatementPeriod) => {
                 this.setState({
-                    getCurrentStatementHasError: false,
-                    currentStatementPeriod: currentStatementPeriod,
+                    getCurrentStatementPeriodHasError: false,
+                    displayedStatementPeriod: displayedStatementPeriod,
                     loaded: true
                 });
             })
             .catch(error => {
                 // display dialog with message that current statement period could not be returned
-                this.setState({getCurrentStatementHasError: true, loaded: true});
+                this.setState({getCurrentStatementPeriodHasError: true, loaded: true});
                 error.message = "Could not load current statement period.";
                 this.props.onErrorReceived(error);
                 console.log('request failed', error)
@@ -83,14 +83,14 @@ export default class HomePageContainer extends React.Component {
     }
 
     getPreviousStatementPeriod() {
-        let currentStatementPeriodId = this.state.currentStatementPeriod._id;
+        let currentStatementPeriodId = this.state.displayedStatementPeriod._id;
         let url = 'http://localhost:3000/api/monthlyStatementPeriod/getPrevious/' + currentStatementPeriodId;
 
         this.fetchStatementPeriod(url);
     }
 
     getNextStatementPeriod(){
-        let currentStatementPeriodId = this.state.currentStatementPeriod._id;
+        let currentStatementPeriodId = this.state.displayedStatementPeriod._id;
         let url = 'http://localhost:3000/api/monthlyStatementPeriod/getNext/' + currentStatementPeriodId;
 
         this.fetchStatementPeriod(url);
@@ -100,17 +100,17 @@ export default class HomePageContainer extends React.Component {
         fetch(url)
             .then(fetchGlobals.checkStatus)
             .then(res => res.json())
-            .then((currentStatementPeriod) => {
+            .then((displayedStatementPeriod) => {
 
                 this.setState({
-                    getCurrentStatementHasError: false,
-                    currentStatementPeriod: currentStatementPeriod || this.state.currentStatementPeriod,
+                    getCurrentStatementPeriodHasError: false,
+                    displayedStatementPeriod: displayedStatementPeriod || this.state.displayedStatementPeriod,
                     loaded: true
                 });
             })
             .catch(error => {
                 // display dialog with message that current statement period could not be returned
-                this.setState({getCurrentStatementHasError: true, loaded: true});
+                this.setState({getCurrentStatementPeriodHasError: true, loaded: true});
                 error.message = "Could not load current statement period.";
                 this.props.onErrorReceived(error);
                 console.log('request failed', error)
@@ -120,13 +120,13 @@ export default class HomePageContainer extends React.Component {
     updateStatementPeriod(statementPeriodDay, updatedExpenses) {
 
         var url = 'http://localhost:3000/api/monthlyStatementPeriod/update/' +
-            this.state.currentStatementPeriod._id + '/' + statementPeriodDay._id;
+            this.state.displayedStatementPeriod._id + '/' + statementPeriodDay._id;
 
         fetch(url, Object.assign({body: JSON.stringify(updatedExpenses)}, fetchSettings.postRequest))
             .then((res) => res.json())
             .then(fetchGlobals.checkStatus)
             .then(updatedStatementPeriod => {
-                this.setState({currentStatementPeriod: updatedStatementPeriod});
+                this.setState({displayedStatementPeriod: updatedStatementPeriod});
             })
             .catch(error => {
                 // display message
@@ -146,10 +146,10 @@ export default class HomePageContainer extends React.Component {
             }];
         } else {
             let daysAfterSelectedDay =
-                getDaysAfterSelectedDay(periodFirstDay, this.state.currentStatementPeriod.statementPeriodDays);
+                getDaysAfterSelectedDay(periodFirstDay, this.state.displayedStatementPeriod.statementPeriodDays);
             periodDays = [periodFirstDay, ...daysAfterSelectedDay];
 
-            url = url + '/fromPeriod/' + this.state.currentStatementPeriod._id;
+            url = url + '/fromPeriod/' + this.state.displayedStatementPeriod._id;
             //validate start date - between the second day of the current period and today
         }
 
@@ -159,7 +159,7 @@ export default class HomePageContainer extends React.Component {
             .then((res) => res.json())
             .then(newStatementPeriod => {
                 let x = newStatementPeriod;
-                this.setState({currentStatementPeriod: newStatementPeriod});
+                this.setState({displayedStatementPeriod: newStatementPeriod});
             })
             .catch(error => {
 
@@ -169,10 +169,10 @@ export default class HomePageContainer extends React.Component {
 
     render() {
         return (
-            <HomePage currentStatementPeriod={this.state.currentStatementPeriod}
+            <HomePage displayedStatementPeriod={this.state.displayedStatementPeriod}
                       categoryTree={getCategoriesStructure()}
                       loaded={this.state.loaded}
-                      getCurrentStatementHasError={this.state.getCurrentStatementHasError}
+                      getCurrentStatementHasError={this.state.getCurrentStatementPeriodHasError}
                       getPreviousStatementPeriod={this.getPreviousStatementPeriod.bind(this)}
                       getNextStatementPeriod={this.getNextStatementPeriod.bind(this)}
                       onChangeExpense={this.updateStatementPeriod.bind(this)}
