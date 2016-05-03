@@ -16,9 +16,10 @@ export default class StatementPeriodDay extends React.Component {
         return (
             <tr>
                 {/*Date col*/}
-                <td className="col-xs-2">
+                <td className="col-xs-2"
+                    onClick={() => this.props.onSelectStatementPeriodDay(this.props.statementPeriodDay)}>
                     <div >
-                        {moment(this.props.day).format('MM/DD/YYYY')}
+                        {moment(this.props.statementPeriodDay.day).format('MM/DD/YYYY')}
                     </div>
                 </td>
                 {/*Value col*/}

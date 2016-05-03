@@ -39,8 +39,8 @@ let lastStatementDayCreationFailed = (req, res, next) => {
 };
 
 let startCreateStatementPeriodDaysTask = () => {
-    //let scheduleTimeSetting = {hour: moment().hour(), minute: moment().add(1, 'minutes').minute()};
-    let scheduleTimeSetting = {hour: 0, minute: 0}; // set task at beginning of new day(on node server)
+    let scheduleTimeSetting = {hour: moment().hour(), minute: moment().add(1, 'minutes').minute()};
+    //let scheduleTimeSetting = {hour: 0, minute: 0}; // set task at beginning of new day(on node server)
 
     nodeScheduler.scheduleJob(scheduleTimeSetting, () => {
         // Move this function to middleware that is used on navigation to home page

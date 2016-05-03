@@ -18,14 +18,40 @@ export default class HomePage extends React.Component {
         super(props);
         this.state = {
             active: 1,
-            createStatementButtonDisabled: true
+            createStatementButtonDisabled: true,
+            selectedStatementPeriodDay: undefined
         };
     }
 
     componentWillReceiveProps(newProps) {
         this.setState({
-            //createStatementButtonDisabled: newProps.currentStatementPeriod !== null
-            createStatementButtonDisabled: StatementPeriod.exists(newProps.currentStatementPeriod)
+            //createStatementButtonDisabled: newProps.displayedStatementPeriod !== null
+            createStatementButtonDisabled: StatementPeriod.exists(newProps.displayedStatementPeriod)
+        });
+    }
+
+    checkCreateStatementPeriodButton(statementPeriodDay) {
+        //buttons is enabled when date is from current period and date is not start date
+        let dayIsInCurrentPeriod = this.props.displayedStatementPeriod.statementPeriodDays
+            .some(spd => {
+                return spd._id === statementPeriodDay._id;
+            });
+        let dayIsStartDay =
+            this.props.displayedStatementPeriod.statementPeriodDays[0]._id === statementPeriodDay._id;
+
+        let buttonIsDisabled = !this.props.displayedStatementPeriod.isLastPeriod ||
+            !dayIsInCurrentPeriod || dayIsStartDay;
+
+
+        return buttonIsDisabled;
+    }
+
+    onSelectStatementPeriodDay(statementPeriodDay) {
+        let createStatementButtonDisabled = this.checkCreateStatementPeriodButton(statementPeriodDay);
+
+        this.setState({
+            selectedStatementPeriodDay: statementPeriodDay,
+            createStatementButtonDisabled: createStatementButtonDisabled
         });
     }
 
@@ -34,12 +60,31 @@ export default class HomePage extends React.Component {
             <div>
                 <Navbar>
                     <Navbar.Header> {/*<Nav bsStyle="tabs" activeKey={this.state.active} onSelect={(selectedKey) => this.handleSelect(selectedKey)}> <NavItem eventKey={1}> Home </NavItem> </Nav>*/}
-                        <Navbar.Brand> <a href="#">Home</a> </Navbar.Brand> <Navbar.Toggle /> </Navbar.Header>
+                        <Navbar.Brand> <a href="#">Home</a> </Navbar.Brand> <Navbar.Toggle />
+                    </Navbar.Header>
+                    <Navbar.Form pullLeft>
+                        <Button onClick={() =>
+                        this.props.getPreviousStatementPeriod()}>
+                            <span className="glyphicon glyphicon-arrow-left"></span>
+                            {' '}
+                            <span>Previous</span>
+                        </Button>
+                        {' '}
+                        <Button onClick={() =>
+                        this.props.getNextStatementPeriod()}>
+                            <span>Next</span>
+                            {' '}
+                            <span className="glyphicon glyphicon-arrow-right"></span>
+                        </Button>
+                    </Navbar.Form>
+
+
                     <Navbar.Collapse>
                         <Navbar.Form pullRight>
                             <Input type="text" placeholder="Search income statement"/>
                             {' '}
-                            <Button onClick={() => this.props.onCreateNewStatementPeriod()}
+                            <Button onClick={() =>
+                            this.props.onCreateNewStatementPeriod(this.state.selectedStatementPeriodDay)}
                                     disabled={this.state.createStatementButtonDisabled}
                             >Create Statement Period</Button>
                             {' '}
@@ -48,7 +93,9 @@ export default class HomePage extends React.Component {
                     </Navbar.Collapse>
                 </Navbar>
                 <Loader loaded={this.props.loaded}>
-                    <StatementPeriod {...this.props} >
+                    <StatementPeriod {...this.props}
+                        onSelectStatementPeriodDay={this.onSelectStatementPeriodDay.bind(this)}
+                    >
                     </StatementPeriod>
                 </Loader>
             </div>

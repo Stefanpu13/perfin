@@ -86,15 +86,6 @@ gulp.task('start', ['copyFonts', 'buildHTML', 'buildCSS'], ()=> {
         b.transform(babelify, {presets: ["es2015", 'react']});
 
         bundleJavascript();
-       // copyToDist();
-
-        function copyToDist() {
-            gulp.src('public/javascript/**/*.js')
-                .pipe(babel({
-                    presets: ['es2015', 'react']
-                }))
-                .pipe(gulp.dest('dist/javascript'));
-        }
     }
 });
 
@@ -106,7 +97,6 @@ gulp.task('default', ['start'], () => {
 
     b.on('update', () => {
         bundleJavascript();
-        //copyToDist();
     });
 
     b.on('log', log);

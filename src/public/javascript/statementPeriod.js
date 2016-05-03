@@ -8,6 +8,7 @@ import {Tabs} from 'react-bootstrap'
 import {Tab} from 'react-bootstrap'
 import  StatementPeriodDayModal  from './statementPeriodDayModal'
 import StatementPeriodTable from './statementPeriodTable'
+import  StatementPeriodTotals from './statementPeriodTotals'
 import expenses from './expenses'
 
 export default class StatementPeriod extends React.Component {
@@ -110,9 +111,10 @@ export default class StatementPeriod extends React.Component {
             {
                 <StatementPeriodTable style={styles}
                                       statementPeriodDays=
-                                          {this.props.currentStatementPeriod.statementPeriodDays}
+                                          {this.props.displayedStatementPeriod.statementPeriodDays}
                                       expensesCategory={category.name}
                                       expensesSubcategory={subCategory}
+                                      onSelectStatementPeriodDay={this.props.onSelectStatementPeriodDay}
                                       onOpenEditExpenseModal=
                                           {(statementPeriodDay)=>this.onOpenEditExpenseModal(statementPeriodDay)}
                                       onOpenAddExpenseModal=
@@ -125,16 +127,18 @@ export default class StatementPeriod extends React.Component {
 
     render() {
         let statementPeriodContent;
-        if (this.props.getCurrentStatementHasError) {
+        if (this.props.getCurrentStatementPeriodHasError) {
             statementPeriodContent = '';
         } else {
-            if (StatementPeriod.exists(this.props.currentStatementPeriod)) {
+            if (StatementPeriod.exists(this.props.displayedStatementPeriod)) {
                 statementPeriodContent =
                     <div>
                         <Tabs activeKey={this.state.activeCategoryName}
                               onSelect={eventKey =>this.onCategorySelect(eventKey)}>
                             <Tab eventKey={'monthly totals'} title="Monthly Totals">
-                                Render monthly totals here
+                                <StatementPeriodTotals
+                                    displayedStatementPeriod={this.props.displayedStatementPeriod}>
+                                </StatementPeriodTotals>
                             </Tab>
                             {
                                 this.props.categoryTree.categories
