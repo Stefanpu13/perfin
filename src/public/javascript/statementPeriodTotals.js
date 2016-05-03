@@ -35,28 +35,36 @@ export default class StatementPeriodTotals extends React.Component {
         return (
             <div>
                 <Panel header={monthlyTotalsHeader}>
-                    <Row className="monthly-totals-row">
-                        <Col xs={12} sm={6} className="monthly-totals-divider">
-
+                    <Col xs={12} sm={6} className="monthly-totals-divider">
+                        <Row className="monthly-totals-row">
                             <Col xs={4}><h3>Income</h3></Col>
                             <Col >
                                 <h3 className="pull-right">
                                     {"Income lv. "}
                                 </h3>
                             </Col>
-                        </Col>
-                        <Col xs={12} sm={6}><h3>Expenses</h3></Col>
-                    </Row>
-                    <Row className="monthly-totals-row">
-                        <Col sm={6} className="monthly-totals-divider">
-                            <Col><h4>Salary:</h4></Col>
-                            <Col><h4>Other income:</h4></Col>
-                        </Col>
-                        <Col sm={6}>
-                            {/*<Col><h4>Expenses: </h4></Col>*/}
+                        </Row>
+                        <Row className="monthly-totals-row">
+                            <Col>
+                                <Row>
+                                    <Col xs={4}><h4>Salary:</h4></Col>
+                                    <Col xs={8}><h4 className="pull-right">Salary lv</h4></Col>
+                                </Row>
 
-                        </Col>
-                    </Row>
+                            </Col>
+                            <Col><h4>Other income:</h4></Col>
+                        </Row>
+                    </Col>
+                    <Col xs={12} sm={6}>
+                        <Row className="monthly-totals-row">
+                            <Col xs={4}><h3>Expenses</h3></Col>
+                            <Col >
+                                <h3 className="pull-right">
+                                    {"Expenses lv. "}
+                                </h3>
+                            </Col>
+                        </Row>
+                    </Col>
                 </Panel>
             </div>
         );
