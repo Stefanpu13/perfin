@@ -13,10 +13,10 @@ class Root extends React.Component {
         this.state = {show: false, message: '', messageClassName: 'error-message-style error-message-layout'};
     }
 
-    onErrorReceived(error) {
+    onErrorReceived(errorMessage) {
         this.setState({
             show: true,
-            message: error.message,
+            message: errorMessage,
             messageClassName: 'error-message-style error-message-layout'
         });
     }

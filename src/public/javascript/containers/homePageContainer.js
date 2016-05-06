@@ -76,8 +76,8 @@ export default class HomePageContainer extends React.Component {
             .catch(error => {
                 // display dialog with message that current statement period could not be returned
                 this.setState({getCurrentStatementPeriodHasError: true, loaded: true});
-                error.message = "Could not load current statement period.";
-                this.props.onErrorReceived(error);
+                let message = "Could not load current statement period.";
+                this.props.onErrorReceived(message);
                 console.log('request failed', error)
             });
     }
@@ -130,8 +130,8 @@ export default class HomePageContainer extends React.Component {
             })
             .catch(error => {
                 // display message
-                error.message = "Could not update current statement period.";
-                this.props.onErrorReceived(error);
+                let message = "Could not update current statement period.";
+                this.props.onErrorReceived(message);
                 console.log('request failed', error)
             });
     }
