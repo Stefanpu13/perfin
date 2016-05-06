@@ -8,10 +8,42 @@ import {Input} from 'react-bootstrap'
 import {Row} from 'react-bootstrap'
 import {Col} from 'react-bootstrap'
 import moment from 'moment'
+import  StatementPeriodDayModal  from './statementPeriodDayModal'
 
 export default class StatementPeriodTotals extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            monthlyIncome: 0,
+            showModal: false
+        };
+    }
+
+    calculateDailyTotalExpenses(statementPeriodDay) {
+        let dayTotalExpenses = 0;
+        for (let category in statementPeriodDay.expenses) {
+            for (let subcategory in statementPeriodDay.expenses[category]) {
+                dayTotalExpenses += statementPeriodDay.expenses[category][subcategory];
+            }
+        }
+
+        return dayTotalExpenses;
+    }
+
+    calculateStatementPeriodTotalExpenses(statementPeriod) {
+        let totalExpenses = statementPeriod.statementPeriodDays.reduce((sum, statementPeriodDay) => {
+            return sum + this.calculateDailyTotalExpenses(statementPeriodDay);
+        }, 0);
+
+        return totalExpenses;
+    }
+
+    changeMonthlyIncome (newIncome){
+        this.setState({monthlyIncome:newIncome, showModal: false});
+    }
+
+    close() {
+        this.setState({showModal: false})
     }
 
     render() {
@@ -46,10 +78,18 @@ export default class StatementPeriodTotals extends React.Component {
                         </Row>
                         <Row className="monthly-totals-row">
                             <Col>
-                                <Row>
-                                    <Col xs={4}><h4>Salary:</h4></Col>
-                                    <Col xs={8}><h4 className="pull-right">Salary lv</h4></Col>
-                                </Row>
+                                {/*<Row>*/}
+                                <Col xs={4}><h4>Salary:</h4></Col>
+                                <Col xs={8} onClick={() => {this.setState({showModal:true})}}>
+
+                                    <h4 style={{paddingLeft:30}} className="pull-right">
+                                        <span className="glyphicon glyphicon-pencil"></span>
+                                    </h4>
+                                    <h4 className="pull-right">
+                                        {this.state.monthlyIncome + ' lv.'}
+                                    </h4>
+                                </Col>
+                                {/*</Row>*/}
 
                             </Col>
                             <Col><h4>Other income:</h4></Col>
@@ -60,12 +100,20 @@ export default class StatementPeriodTotals extends React.Component {
                             <Col xs={4}><h3>Expenses</h3></Col>
                             <Col >
                                 <h3 className="pull-right">
-                                    {"Expenses lv. "}
+                                    {this.calculateStatementPeriodTotalExpenses(
+                                        this.props.displayedStatementPeriod) + ' lv.'}
                                 </h3>
                             </Col>
                         </Row>
                     </Col>
                 </Panel>
+                <StatementPeriodDayModal
+                    showModal={this.state.showModal}
+                    onClose={()=> this.close()}
+                    changeDailyCash ={(monthlyIncome) => {this.changeMonthlyIncome(monthlyIncome)}}
+                    cashValue={this.state.monthlyIncome}
+                >
+                </StatementPeriodDayModal>
             </div>
         );
     }
