@@ -14,8 +14,9 @@ export default class StatementPeriodTotals extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            monthlyIncome: 0,
-            showModal: false
+            showModal: false,
+            incomeType: 'salary',
+            updatedIncome: {}
         };
     }
 
@@ -38,12 +39,39 @@ export default class StatementPeriodTotals extends React.Component {
         return totalExpenses;
     }
 
-    changeMonthlyIncome (newIncome){
-        this.setState({monthlyIncome:newIncome, showModal: false});
-    }
-
     close() {
         this.setState({showModal: false})
+    }
+
+
+    updateIncome(incomeValue) {
+        let newIncome = JSON.parse(JSON.stringify(this.props.displayedStatementPeriod.income || {}));
+        newIncome[this.state.incomeType] = incomeValue;
+        this.setState({showModal: false});
+
+        this.props.updateIncome(newIncome);
+    }
+
+    getCashValue(income) {
+        return (income && income[this.state.incomeType]) || 0;
+    }
+
+    getSalary(income) {
+        return ((income && income.salary) || 0);
+    }
+
+    getOtherIncome(income) {
+        return ((income && income.other) || 0);
+    }
+
+    getTotalIncome(income) {
+        if (!income) {
+            return 0;
+        }
+
+        let salary = Number(income.salary) || 0;
+        let other = Number(income.other) || 0;
+        return salary + other;
     }
 
     render() {
@@ -72,7 +100,7 @@ export default class StatementPeriodTotals extends React.Component {
                             <Col xs={4}><h3>Income</h3></Col>
                             <Col >
                                 <h3 className="pull-right">
-                                    {"Income lv. "}
+                                    {this.getTotalIncome(this.props.displayedStatementPeriod.income) +' lv.'}
                                 </h3>
                             </Col>
                         </Row>
@@ -80,13 +108,14 @@ export default class StatementPeriodTotals extends React.Component {
                             <Col>
                                 {/*<Row>*/}
                                 <Col xs={4}><h4>Salary:</h4></Col>
-                                <Col xs={8} onClick={() => {this.setState({showModal:true})}}>
+                                <Col xs={8} onClick={() => {
+                                this.setState({showModal:true, incomeType:'salary'})}}>
 
                                     <h4 style={{paddingLeft:30}} className="pull-right">
                                         <span className="glyphicon glyphicon-pencil"></span>
                                     </h4>
                                     <h4 className="pull-right">
-                                        {this.state.monthlyIncome + ' lv.'}
+                                        {this.getSalary(this.props.displayedStatementPeriod.income) +' lv.'}
                                     </h4>
                                 </Col>
                                 {/*</Row>*/}
@@ -110,8 +139,9 @@ export default class StatementPeriodTotals extends React.Component {
                 <StatementPeriodDayModal
                     showModal={this.state.showModal}
                     onClose={()=> this.close()}
-                    changeDailyCash ={(monthlyIncome) => {this.changeMonthlyIncome(monthlyIncome)}}
-                    cashValue={this.state.monthlyIncome}
+                    //changeCash ={(income) => {this.props.updateIncome(income)}}
+                    changeCash={this.updateIncome.bind(this)}
+                    cashValue={this.getCashValue(this.props.displayedStatementPeriod.income)}
                 >
                 </StatementPeriodDayModal>
             </div>

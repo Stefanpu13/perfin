@@ -8,6 +8,7 @@ var statementPeriodSchema = new Schema({
     isLastPeriod: Boolean,
     startDate: Date,
     endDate: Date,
+    income: {salary: Number, other: Number},
     statementPeriodDays: [{
         day: Date,
         expenses: {
@@ -26,11 +27,11 @@ statementPeriodSchema.statics.getCurrentStatementPeriod = function (callback) {
     return this.findOne({}, {}, {sort: {'$natural': -1}}, callback);
 };
 
-statementPeriodSchema.statics.getPreviousPeriod = function(currentPeriodId, callback) {
+statementPeriodSchema.statics.getPreviousPeriod = function (currentPeriodId, callback) {
     return this.findOne({"_id": {'$lt': currentPeriodId}}).sort({'$natural': -1}).exec(callback);
 };
 
-statementPeriodSchema.statics.getNextPeriod = function(currentPeriodId, callback) {
+statementPeriodSchema.statics.getNextPeriod = function (currentPeriodId, callback) {
     return this.findOne({"_id": {'$gt': currentPeriodId}}).sort({'$natural': 1}).exec(callback);
 };
 

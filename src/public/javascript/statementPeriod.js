@@ -8,7 +8,7 @@ import {Tabs} from 'react-bootstrap'
 import {Tab} from 'react-bootstrap'
 import  StatementPeriodDayModal  from './statementPeriodDayModal'
 import StatementPeriodTable from './statementPeriodTable'
-import  StatementPeriodTotals from './statementPeriodTotals'
+import  StatementPeriodTotalsContainer from './containers/statementPeriodTotalsContainer'
 import expenses from './expenses'
 
 export default class StatementPeriod extends React.Component {
@@ -136,9 +136,10 @@ export default class StatementPeriod extends React.Component {
                         <Tabs activeKey={this.state.activeCategoryName}
                               onSelect={eventKey =>this.onCategorySelect(eventKey)}>
                             <Tab eventKey={'monthly totals'} title="Monthly Totals">
-                                <StatementPeriodTotals
-                                    displayedStatementPeriod={this.props.displayedStatementPeriod}>
-                                </StatementPeriodTotals>
+                                <StatementPeriodTotalsContainer
+                                    displayedStatementPeriod={this.props.displayedStatementPeriod}
+                                    updateIncome ={this.props.updateIncome}>
+                                </StatementPeriodTotalsContainer>
                             </Tab>
                             {
                                 this.props.categoryTree.categories
@@ -148,7 +149,7 @@ export default class StatementPeriod extends React.Component {
                         <StatementPeriodDayModal
                             showModal={this.state.showModal}
                             onClose={()=> this.close()}
-                            changeDailyCash={(newDailyExpenses, selectedSubcategory) => {
+                            changeCash={(newDailyExpenses, selectedSubcategory) => {
                                     this.state.changeDailyExpenses(newDailyExpenses, selectedSubcategory)
                                 }
                             }

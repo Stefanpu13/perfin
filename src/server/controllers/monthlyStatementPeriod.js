@@ -56,7 +56,7 @@ let updateOldStatementPeriod = (req, res, next) => {
 
     let statementPeriodId = req.params.statementPeriodId;
     let query = {_id: statementPeriodId};
-    let updateOptions = Object.assign( {}, req.isLastPeriodOption, req.removeDaysFromPeriodOption);
+    let updateOptions = Object.assign({}, req.isLastPeriodOption, req.removeDaysFromPeriodOption);
 
     StatementPeriodModel.findOneAndUpdate(query, updateOptions, {new: true}, (err, updatedPeriod) => {
         if (err) {
@@ -85,7 +85,7 @@ router.get('/getCurrent', (req, res) => {
 
 router.get('/getPrevious/:statementPeriodId', (req, res) => {
     let statementPeriodId = req.params.statementPeriodId;
-    StatementPeriodModel.getPreviousPeriod(statementPeriodId, (err, previousStatementPeriod) =>{
+    StatementPeriodModel.getPreviousPeriod(statementPeriodId, (err, previousStatementPeriod) => {
         if (err) {
             res.status(500).end('Error occurred');
         } else {
@@ -96,7 +96,7 @@ router.get('/getPrevious/:statementPeriodId', (req, res) => {
 
 router.get('/getNext/:statementPeriodId', (req, res) => {
     let statementPeriodId = req.params.statementPeriodId;
-    StatementPeriodModel.getNextPeriod(statementPeriodId, (err, previousStatementPeriod) =>{
+    StatementPeriodModel.getNextPeriod(statementPeriodId, (err, previousStatementPeriod) => {
         if (err) {
             res.status(500).end('Error occurred');
         } else {
@@ -104,6 +104,16 @@ router.get('/getNext/:statementPeriodId', (req, res) => {
         }
     });
 });
+
+router.get('/hasStatementDayCreationError',
+    scheduler.lastStatementDayCreationFailed,
+    (req, res) => {
+        if (req.statementDayCreationError) {
+            res.status(500).json(req.statementDayCreationError);
+        } else {
+            res.status(200).end();
+        }
+    });
 
 router.post('/create', (req, res) => {
     var statementPeriodDays = req.body;
@@ -127,13 +137,13 @@ router.use('/create/fromPeriod/:statementPeriodId', createIsLastPeriodOption);
 router.use('/create/fromPeriod/:statementPeriodId', createRemoveDaysFromPeriodOption);
 router.post('/create/fromPeriod/:statementPeriodId', updateOldStatementPeriod);
 
-router.post('/update/:statementPeriodId/:statementPeriodDayId', (req, res) => {
+router.post('/updateExpenses/:statementPeriodId/:statementPeriodDayId', (req, res) => {
     let statementPeriodId = req.params.statementPeriodId;
     let statementPeriodDayId = req.params.statementPeriodDayId;
-    var newExpenses = req.body;
+    let newExpenses = req.body;
 
-    var query = {_id: statementPeriodId, 'statementPeriodDays._id': statementPeriodDayId};
-    var updateOptions = {
+    let query = {_id: statementPeriodId, 'statementPeriodDays._id': statementPeriodDayId};
+    let updateOptions = {
         $set: {'statementPeriodDays.$.expenses': newExpenses}
     };
 
@@ -149,14 +159,25 @@ router.post('/update/:statementPeriodId/:statementPeriodDayId', (req, res) => {
         })
 });
 
-router.get('/hasStatementDayCreationError',
-    scheduler.lastStatementDayCreationFailed,
-    (req, res) => {
-        if (req.statementDayCreationError) {
-            res.status(500).json(req.statementDayCreationError);
-        } else {
-            res.status(200).end();
-        }
-    });
+router.post('/updateIncome/:statementPeriodId', (req, res) => {
+    let statementPeriodId = req.params.statementPeriodId;
+    let newIncome = req.body;
+
+    let query = {_id: statementPeriodId};
+    let updateOptions = {
+        $set: {'income': newIncome}
+    };
+
+    //res.status(500).end('Error Occurred');
+
+    StatementPeriodModel.findOneAndUpdate(query, updateOptions, {new: true},
+        (err, updatedPeriod) => {
+            if (err) {
+                res.status(500).end('Error occurred');
+            } else {
+                res.status(200).json(updatedPeriod);
+            }
+        });
+});
 
 module.exports = router;

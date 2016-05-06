@@ -117,12 +117,29 @@ export default class HomePageContainer extends React.Component {
             });
     }
 
-    updateStatementPeriod(statementPeriodDay, updatedExpenses) {
-
-        var url = 'http://localhost:3000/api/monthlyStatementPeriod/update/' +
+    updateStatementPeriodExpenses(statementPeriodDay, updatedExpenses) {
+        var url = 'http://localhost:3000/api/monthlyStatementPeriod/updateExpenses/' +
             this.state.displayedStatementPeriod._id + '/' + statementPeriodDay._id;
 
         fetch(url, Object.assign({body: JSON.stringify(updatedExpenses)}, fetchSettings.postRequest))
+            .then((res) => res.json())
+            .then(fetchGlobals.checkStatus)
+            .then(updatedStatementPeriod => {
+                this.setState({displayedStatementPeriod: updatedStatementPeriod});
+            })
+            .catch(error => {
+                // display message
+                let message = "Could not update current statement period.";
+                this.props.onErrorReceived(message);
+                console.log('request failed', error)
+            });
+    }
+
+    updateStatementPeriodIncome(updatedIncome){
+        let url = 'http://localhost:3000/api/monthlyStatementPeriod/updateIncome/' +
+            this.state.displayedStatementPeriod._id;
+
+        fetch(url, Object.assign({body: JSON.stringify(updatedIncome)}, fetchSettings.postRequest))
             .then((res) => res.json())
             .then(fetchGlobals.checkStatus)
             .then(updatedStatementPeriod => {
@@ -175,10 +192,12 @@ export default class HomePageContainer extends React.Component {
                       getCurrentStatementHasError={this.state.getCurrentStatementPeriodHasError}
                       getPreviousStatementPeriod={this.getPreviousStatementPeriod.bind(this)}
                       getNextStatementPeriod={this.getNextStatementPeriod.bind(this)}
-                      onChangeExpense={this.updateStatementPeriod.bind(this)}
+                      onChangeExpense={this.updateStatementPeriodExpenses.bind(this)}
+                      updateIncome={this.updateStatementPeriodIncome.bind(this)}
                 //onSelectStatementPeriodDay={(statementPeriodDay) =>
                 //this.onSelectStatementPeriodDay(statementPeriodDay)}
-                      onCreateNewStatementPeriod={(periodFirstDay) => this.onCreateNewStatementPeriod(periodFirstDay)}
+                      onCreateNewStatementPeriod={(periodFirstDay) =>
+                       this.onCreateNewStatementPeriod(periodFirstDay)}
             >
             </HomePage>
         )
