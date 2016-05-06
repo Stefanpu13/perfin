@@ -8,7 +8,9 @@ import {Input} from 'react-bootstrap'
 import {Row} from 'react-bootstrap'
 import {Col} from 'react-bootstrap'
 import moment from 'moment'
-import  StatementPeriodDayModal  from './statementPeriodDayModal'
+import StatementPeriodDayModal  from '../statementPeriodDayModal'
+import TotalsIncome from './totalsIncome'
+import TotalsHeader from './totalsHeader'
 
 export default class StatementPeriodTotals extends React.Component {
     constructor(props) {
@@ -43,7 +45,6 @@ export default class StatementPeriodTotals extends React.Component {
         this.setState({showModal: false})
     }
 
-
     updateIncome(incomeValue) {
         let newIncome = JSON.parse(JSON.stringify(this.props.displayedStatementPeriod.income || {}));
         newIncome[this.state.incomeType] = incomeValue;
@@ -56,12 +57,8 @@ export default class StatementPeriodTotals extends React.Component {
         return (income && income[this.state.incomeType]) || 0;
     }
 
-    getSalary(income) {
-        return ((income && income.salary) || 0);
-    }
-
-    getOtherIncome(income) {
-        return ((income && income.other) || 0);
+    showTotalsModal(incomeType) {
+        this.setState({showModal: true, incomeType: incomeType})
     }
 
     getTotalIncome(income) {
@@ -75,22 +72,10 @@ export default class StatementPeriodTotals extends React.Component {
     }
 
     render() {
-        let daysLength = this.props.displayedStatementPeriod.statementPeriodDays.length;
         const monthlyTotalsHeader =
-            <div>
-                <Row> <Col sm={4}>Income statement</Col>
-                    <Col sm={4}>
-                        {"Start Date: " +
-                        moment(this.props.displayedStatementPeriod.statementPeriodDays[0].day)
-                            .format("MM/DD/YYYY")}
-                    </Col>
-                    <Col sm={4}>
-                        {"End Date: " +
-                        moment(this.props.displayedStatementPeriod.statementPeriodDays[daysLength - 1].day)
-                            .format("MM/DD/YYYY")}
-                    </Col>
-                </Row>
-            </div>
+            <div><TotalsHeader
+                statementPeriodDays={this.props.displayedStatementPeriod.statementPeriodDays}>
+            </TotalsHeader></div>;
 
         return (
             <div>
@@ -100,28 +85,21 @@ export default class StatementPeriodTotals extends React.Component {
                             <Col xs={4}><h3>Income</h3></Col>
                             <Col >
                                 <h3 className="pull-right">
-                                    {this.getTotalIncome(this.props.displayedStatementPeriod.income) +' lv.'}
+                                    {this.getTotalIncome(this.props.displayedStatementPeriod.income) + ' lv.'}
                                 </h3>
                             </Col>
                         </Row>
                         <Row className="monthly-totals-row">
-                            <Col>
-                                {/*<Row>*/}
-                                <Col xs={4}><h4>Salary:</h4></Col>
-                                <Col xs={8} onClick={() => {
-                                this.setState({showModal:true, incomeType:'salary'})}}>
-
-                                    <h4 style={{paddingLeft:30}} className="pull-right">
-                                        <span className="glyphicon glyphicon-pencil"></span>
-                                    </h4>
-                                    <h4 className="pull-right">
-                                        {this.getSalary(this.props.displayedStatementPeriod.income) +' lv.'}
-                                    </h4>
-                                </Col>
-                                {/*</Row>*/}
-
-                            </Col>
-                            <Col><h4>Other income:</h4></Col>
+                            <TotalsIncome
+                                income={this.props.displayedStatementPeriod.income}
+                                incomeType={"salary"}
+                                showTotalsModal={this.showTotalsModal.bind(this)}>
+                            </TotalsIncome>
+                            <TotalsIncome
+                                income={this.props.displayedStatementPeriod.income}
+                                incomeType={"other"}
+                                showTotalsModal={this.showTotalsModal.bind(this)}>
+                            </TotalsIncome>
                         </Row>
                     </Col>
                     <Col xs={12} sm={6}>
@@ -139,7 +117,6 @@ export default class StatementPeriodTotals extends React.Component {
                 <StatementPeriodDayModal
                     showModal={this.state.showModal}
                     onClose={()=> this.close()}
-                    //changeCash ={(income) => {this.props.updateIncome(income)}}
                     changeCash={this.updateIncome.bind(this)}
                     cashValue={this.getCashValue(this.props.displayedStatementPeriod.income)}
                 >
