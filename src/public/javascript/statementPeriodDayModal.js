@@ -9,7 +9,7 @@ import {Modal} from 'react-bootstrap'
 import {Col} from  'react-bootstrap'
 import StatementPeriodDayModalDropdown from './statementPeriodDayModalDropdown'
 
-function isValidExpensesValue(input) {
+function isValidCashValue(input) {
     return input !== null && isNaN(+input) === false && input >= 0;
 }
 
@@ -17,23 +17,23 @@ export default class StatementPeriodDayModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentDailyExpenses: undefined,
-            expensesInputStyle: 'success',
+            cashValue: undefined,
+            cashInputStyle: 'success',
             selectedSubcategory: 'other'
         };
     }
 
     componentWillReceiveProps(newProps) {
         this.setState({
-            currentDailyExpenses: newProps.currentDailyExpenses,
-            expensesInputStyle: 'success',
+            cashValue: newProps.cashValue,
+            cashInputStyle: 'success',
             selectedSubcategory: 'other'
         });
     }
 
-    onChangeExpensesValue(event) {
-        var expensesStyle = isValidExpensesValue(event.target.value) ? 'success' : 'error';
-        this.setState({currentDailyExpenses: event.target.value, expensesInputStyle: expensesStyle});
+    onChangeCashValue(event) {
+        var cashStyle = isValidCashValue(event.target.value) ? 'success' : 'error';
+        this.setState({cashValue: event.target.value, cashInputStyle: cashStyle});
     }
 
     onChangeSelectedSubcategory(selectedSubcategory) {
@@ -41,7 +41,7 @@ export default class StatementPeriodDayModal extends React.Component {
     }
 
     isSubmitButtonDisabled() {
-        var disabled = this.state.expensesInputStyle !== 'success' ? true : false;
+        var disabled = this.state.cashInputStyle !== 'success' ? true : false;
         return disabled;
     }
 
@@ -50,8 +50,8 @@ export default class StatementPeriodDayModal extends React.Component {
     }
 
     onFormSubmit(event) {
-        if (isValidExpensesValue(this.state.currentDailyExpenses)) {
-            this.props.changeDailyExpenses(this.state.currentDailyExpenses, this.state.selectedSubcategory);
+        if (isValidCashValue(this.state.cashValue)) {
+            this.props.changeDailyCash(this.state.cashValue, this.state.selectedSubcategory);
         }
 
         event.preventDefault();
@@ -65,9 +65,9 @@ export default class StatementPeriodDayModal extends React.Component {
                 <Modal.Body>
                     <form onSubmit={(e) => this.onFormSubmit(e)}>
                         <Input type="text" ref="currentValueInput"
-                               value={this.state.currentDailyExpenses}
-                               onChange={(event) => this.onChangeExpensesValue(event)}
-                               bsStyle={this.state.expensesInputStyle}
+                               value={this.state.cashValue}
+                               onChange={(event) => this.onChangeCashValue(event)}
+                               bsStyle={this.state.cashInputStyle}
                                hasFeedback/>
                         <StatementPeriodDayModalDropdown showSubcategoryInput={this.props.showSubcategoryInput}
                                                          category={this.props.category}

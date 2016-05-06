@@ -148,7 +148,7 @@ export default class StatementPeriod extends React.Component {
                         <StatementPeriodDayModal
                             showModal={this.state.showModal}
                             onClose={()=> this.close()}
-                            changeDailyExpenses={(newDailyExpenses, selectedSubcategory) => {
+                            changeDailyCash={(newDailyExpenses, selectedSubcategory) => {
                                     this.state.changeDailyExpenses(newDailyExpenses, selectedSubcategory)
                                 }
                             }
@@ -156,7 +156,7 @@ export default class StatementPeriod extends React.Component {
                                 return category.name === this.state.activeCategoryName;
                             })}
                             showSubcategoryInput={this.state.showSubcategoryInput}
-                            currentDailyExpenses={this.state.currentDailyExpenses}
+                            cashValue={this.state.currentDailyExpenses}
                         >
                         </StatementPeriodDayModal>
                     </div>
