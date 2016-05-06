@@ -53,18 +53,21 @@ let startCreateStatementPeriodDaysTask = () => {
                 if (todayIsAfterLastDayInPeriod) {
                     //addStatementPeriodDays to period
 
-                    let newStatementPeriodDays = createConsecutiveDaysForCurrentPeriod(lastDayInCurrentPeriod.day);
+                    let newStatementPeriodDays =
+                        createConsecutiveDaysForCurrentPeriod(lastDayInCurrentPeriod.day);
                     Array.prototype.push.apply(statementPeriod.statementPeriodDays, newStatementPeriodDays);
-                    StatementPeriodModel.update({}, statementPeriod, (err, raw) => {
-                        if (err) {
-                            // TODO: how to prepare message for the user when he opens the app?
-                            createDaysError = {
-                                message: "The automatic day insertion failed for " +
-                                newStatementPeriodDays[newStatementPeriodDays.length - 1] +
-                                '. Please, contact an administrator.'
-                            };
-                        }
-                    });
+                    StatementPeriodModel.findOneAndUpdate(
+                        {_id: statementPeriod._id}, statementPeriod, (err, model) => {
+                            if (err) {
+                                // TODO: how to prepare message for the user when he opens the app?
+                                createDaysError = {
+                                    message: "The automatic day insertion failed for " +
+                                    newStatementPeriodDays[newStatementPeriodDays.length - 1] +
+                                    '. Please, contact an administrator.'
+                                };
+                            }
+                        });
+
                 }
             }
         })
