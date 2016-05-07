@@ -59,9 +59,9 @@ class StatementPeriodTable extends React.Component {
                                 total={total}
                                 statementPeriodDay={statementPeriodDay}
                                 showEditButtonRow={this.state.showEditButtonRow}
-                                onSelectStatementPeriodDay={this.props.onSelectStatementPeriodDay}
-                                onOpenEditExpenseModal={() => this.props.onOpenEditExpenseModal(statementPeriodDay)}
-                                onOpenAddExpenseModal={() => this.props.onOpenAddExpenseModal(statementPeriodDay)}
+                                selectStatementPeriodDay={this.props.selectStatementPeriodDay}
+                                openEditExpenseModal={() => this.props.openEditExpenseModal(statementPeriodDay)}
+                                openAddExpenseModal={() => this.props.openAddExpenseModal(statementPeriodDay)}
                                 key={i}
                             >
                             </StatementPeriodDay>

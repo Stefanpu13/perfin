@@ -13,7 +13,7 @@ class Root extends React.Component {
         this.state = {show: false, message: '', messageClassName: 'error-message-style error-message-layout'};
     }
 
-    onErrorReceived(errorMessage) {
+    showReceivedError(errorMessage) {
         this.setState({
             show: true,
             message: errorMessage,
@@ -21,7 +21,7 @@ class Root extends React.Component {
         });
     }
 
-    onWarningReceived(warning) {
+    showReceivedWarning(warning) {
         this.setState({
             show: true,
             message: warning.message,
@@ -29,21 +29,21 @@ class Root extends React.Component {
         });
     }
 
-    onMessageHidden() {
+    hideMessage() {
         this.setState({show: false});
     }
 
     render() {
         return <div>
             <HomePageContainer
-                onErrorReceived={error => this.onErrorReceived(error)}
-                onWarningReceived={warning => this.onWarningReceived(warning)}>
+                showReceivedError={error => this.showReceivedError(error)}
+                showReceivedWarning={warning => this.showReceivedWarning(warning)}>
             </HomePageContainer>
             <MessageOverlay
                 show={this.state.show}
                 message={this.state.message}
                 messageClassName={this.state.messageClassName}
-                hideMessage={() => this.onMessageHidden()}>
+                hideMessage={() => this.hideMessage()}>
             </MessageOverlay>
         </div>
     }

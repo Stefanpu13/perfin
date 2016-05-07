@@ -11,11 +11,7 @@ export default class StatementPeriodDayModalDropdown extends React.Component {
         super(props);
     }
 
-    onDropdownSelect(event, eventKey) {
-        this.props.onChangeSelectedSubcategory(eventKey);
-    }
-
-    isNotTotalsCategory(subcategory){
+    isNotTotalsCategory(subcategory) {
         return subcategory !== 'totals';
     }
 
@@ -26,7 +22,7 @@ export default class StatementPeriodDayModalDropdown extends React.Component {
         return (
             <DropdownButton style={styles} title={this.props.selectedSubcategory} key={11}
                             id="statement-period-day-modal-dropdown"
-                            onSelect={(event, eventKey) => this.onDropdownSelect(event, eventKey)}>
+                            onSelect={(event, eventKey) => this.props.changeSelectedSubcategory(eventKey)}>
                 {
                     this.props.category ? this.props.category.subcategories
                         .filter(this.isNotTotalsCategory)

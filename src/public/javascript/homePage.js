@@ -46,7 +46,7 @@ export default class HomePage extends React.Component {
         return buttonIsDisabled;
     }
 
-    onSelectStatementPeriodDay(statementPeriodDay) {
+    selectStatementPeriodDay(statementPeriodDay) {
         let createStatementButtonDisabled = this.checkCreateStatementPeriodButton(statementPeriodDay);
 
         this.setState({
@@ -84,7 +84,7 @@ export default class HomePage extends React.Component {
                             <Input type="text" placeholder="Search income statement"/>
                             {' '}
                             <Button onClick={() =>
-                            this.props.onCreateNewStatementPeriod(this.state.selectedStatementPeriodDay)}
+                            this.props.createNewStatementPeriod(this.state.selectedStatementPeriodDay)}
                                     disabled={this.state.createStatementButtonDisabled}
                             >Create Statement Period</Button>
                         </Navbar.Form>
@@ -92,7 +92,7 @@ export default class HomePage extends React.Component {
                 </Navbar>
                 <Loader loaded={this.props.loaded}>
                     <StatementPeriod {...this.props}
-                        onSelectStatementPeriodDay={this.onSelectStatementPeriodDay.bind(this)}
+                        selectStatementPeriodDay={this.selectStatementPeriodDay.bind(this)}
                     >
                     </StatementPeriod>
                 </Loader>

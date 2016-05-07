@@ -56,7 +56,7 @@ export default class HomePageContainer extends React.Component {
             .then(fetchGlobals.checkStatus)
             .catch(error => {
                 error.response.json().then(err => {
-                    this.props.onWarningReceived(err);
+                    this.props.showReceivedWarning(err);
                 });
 
             });
@@ -77,7 +77,7 @@ export default class HomePageContainer extends React.Component {
                 // display dialog with message that current statement period could not be returned
                 this.setState({getCurrentStatementPeriodHasError: true, loaded: true});
                 let message = "Could not load current statement period.";
-                this.props.onErrorReceived(message);
+                this.props.showReceivedError(message);
                 console.log('request failed', error)
             });
     }
@@ -112,7 +112,7 @@ export default class HomePageContainer extends React.Component {
                 // display dialog with message that current statement period could not be returned
                 this.setState({getCurrentStatementPeriodHasError: true, loaded: true});
                 error.message = "Could not load current statement period.";
-                this.props.onErrorReceived(error);
+                this.props.showReceivedError(error);
                 console.log('request failed', error)
             });
     }
@@ -130,7 +130,7 @@ export default class HomePageContainer extends React.Component {
             .catch(error => {
                 // display message
                 let message = "Could not update current statement period.";
-                this.props.onErrorReceived(message);
+                this.props.showReceivedError(message);
                 console.log('request failed', error)
             });
     }
@@ -148,12 +148,12 @@ export default class HomePageContainer extends React.Component {
             .catch(error => {
                 // display message
                 let message = "Could not update current statement period.";
-                this.props.onErrorReceived(message);
+                this.props.showReceivedError(message);
                 console.log('request failed', error)
             });
     }
 
-    onCreateNewStatementPeriod(periodFirstDay) {
+    createNewStatementPeriod(periodFirstDay) {
         let periodDays;
         // check if start Date is defined and valid
         let url = 'http://localhost:3000/api/monthlyStatementPeriod/create';
@@ -192,12 +192,12 @@ export default class HomePageContainer extends React.Component {
                       getCurrentStatementHasError={this.state.getCurrentStatementPeriodHasError}
                       getPreviousStatementPeriod={this.getPreviousStatementPeriod.bind(this)}
                       getNextStatementPeriod={this.getNextStatementPeriod.bind(this)}
-                      onChangeExpense={this.updateStatementPeriodExpenses.bind(this)}
+                      changeExpense={this.updateStatementPeriodExpenses.bind(this)}
                       updateIncome={this.updateStatementPeriodIncome.bind(this)}
                 //onSelectStatementPeriodDay={(statementPeriodDay) =>
                 //this.onSelectStatementPeriodDay(statementPeriodDay)}
-                      onCreateNewStatementPeriod={(periodFirstDay) =>
-                       this.onCreateNewStatementPeriod(periodFirstDay)}
+                      createNewStatementPeriod={(periodFirstDay) =>
+                       this.createNewStatementPeriod(periodFirstDay)}
             >
             </HomePage>
         )

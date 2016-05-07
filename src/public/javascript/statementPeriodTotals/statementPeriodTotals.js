@@ -23,7 +23,7 @@ export default class StatementPeriodTotals extends React.Component {
         };
     }
 
-    close() {
+    closeModal() {
         this.setState({showModal: false})
     }
 
@@ -85,7 +85,7 @@ export default class StatementPeriodTotals extends React.Component {
                 </Panel>
                 <StatementPeriodDayModal
                     showModal={this.state.showModal}
-                    onClose={()=> this.close()}
+                    closeModal={()=> this.closeModal()}
                     changeCash={this.updateIncome.bind(this)}
                     cashValue={this.getCashValue(this.props.displayedStatementPeriod.income)}
                 >

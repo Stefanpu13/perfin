@@ -31,12 +31,12 @@ export default class StatementPeriodDayModal extends React.Component {
         });
     }
 
-    onChangeCashValue(event) {
+    changeCashValue(event) {
         var cashStyle = isValidCashValue(event.target.value) ? 'success' : 'error';
         this.setState({cashValue: event.target.value, cashInputStyle: cashStyle});
     }
 
-    onChangeSelectedSubcategory(selectedSubcategory) {
+    changeSelectedSubcategory(selectedSubcategory) {
         this.setState({selectedSubcategory: selectedSubcategory});
     }
 
@@ -45,11 +45,7 @@ export default class StatementPeriodDayModal extends React.Component {
         return disabled;
     }
 
-    onClose() {
-        this.props.onClose();
-    }
-
-    onFormSubmit(event) {
+    changeCash(event) {
         if (isValidCashValue(this.state.cashValue)) {
             this.props.changeCash(this.state.cashValue, this.state.selectedSubcategory);
         }
@@ -61,19 +57,19 @@ export default class StatementPeriodDayModal extends React.Component {
         return (
             <Modal
                 show={this.props.showModal}
-                onHide={() => this.onClose()}>
+                onHide={() => this.props.closeModal()}>
                 <Modal.Body>
-                    <form onSubmit={(e) => this.onFormSubmit(e)}>
+                    <form onSubmit={(e) => this.changeCash(e)}>
                         <Input type="text" ref="currentValueInput"
                                value={this.state.cashValue}
-                               onChange={(event) => this.onChangeCashValue(event)}
+                               onChange={(event) => this.changeCashValue(event)}
                                bsStyle={this.state.cashInputStyle}
                                hasFeedback/>
                         <StatementPeriodDayModalDropdown showSubcategoryInput={this.props.showSubcategoryInput}
                                                          category={this.props.category}
                                                          selectedSubcategory={this.state.selectedSubcategory}
-                                                         onChangeSelectedSubcategory=
-                                                             {this.onChangeSelectedSubcategory.bind(this)}
+                                                         changeSelectedSubcategory=
+                                                             {this.changeSelectedSubcategory.bind(this)}
                         >
                         </StatementPeriodDayModalDropdown>
 
@@ -81,7 +77,7 @@ export default class StatementPeriodDayModal extends React.Component {
                         <Button type="submit" disabled={this.isSubmitButtonDisabled()}>
                             <span className="glyphicon glyphicon-ok"></span>
                         </Button>
-                        <Button type="button" onClick={() => this.onClose()}>
+                        <Button type="button" onClick={() => this.props.closeModal()}>
                             <span className="glyphicon glyphicon-remove"></span>
                         </Button>
                     </form>
