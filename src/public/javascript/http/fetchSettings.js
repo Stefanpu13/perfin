@@ -2,8 +2,6 @@
  * Created by stefan.uzunov on 4/19/2016.
  */
 
-
-
 module.exports = {
     postRequest:{
         method: 'post',

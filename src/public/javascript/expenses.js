@@ -17,7 +17,7 @@ function addExpenses(addedExpensesValue, oldExpenses, category, subcategory) {
     return oldExpenses;
 }
 
- module.exports ={
-        add: addExpenses,
-        update:updateExpenses
+module.exports = {
+    add: addExpenses,
+    update: updateExpenses
 };
