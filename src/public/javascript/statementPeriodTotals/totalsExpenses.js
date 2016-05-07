@@ -36,7 +36,7 @@ export default class TotalsExpenses extends React.Component {
                 <Row className="monthly-totals-row">
                     <Col xs={4}><h3>Expenses</h3></Col>
                     <Col >
-                        <h3 className="pull-right">
+                        <h3 className="pull-right" style={{color:'red'}}>
                             {this.calculateStatementPeriodTotalExpenses(
                                 this.props.displayedStatementPeriod) + ' lv.'}
                         </h3>
