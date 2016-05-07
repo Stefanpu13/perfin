@@ -6,7 +6,6 @@ import ReactDOM from 'react-dom'
 import { Input } from 'react-bootstrap'
 import {Button} from 'react-bootstrap'
 import {Modal} from 'react-bootstrap'
-import {Col} from  'react-bootstrap'
 import StatementPeriodDayModalDropdown from './statementPeriodDayModalDropdown'
 
 function isValidCashValue(input) {
