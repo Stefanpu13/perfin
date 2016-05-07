@@ -11,7 +11,7 @@ export default class TotalsIncome extends React.Component {
         super(props);
     }
 
-    getTotalIncome(income) {
+    static getTotalIncome(income) {
         if (!income) {
             return 0;
         }
@@ -27,7 +27,7 @@ export default class TotalsIncome extends React.Component {
                 <Col xs={4}><h3>Income</h3></Col>
                 <Col >
                     <h3 className="pull-right">
-                        {this.getTotalIncome(this.props.income) + ' lv.'}
+                        {TotalsIncome.getTotalIncome(this.props.income) + ' lv.'}
                     </h3>
                 </Col>
             </Row>

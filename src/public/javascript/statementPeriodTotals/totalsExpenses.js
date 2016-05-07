@@ -11,7 +11,7 @@ export default class TotalsExpenses extends React.Component {
         super(props);
     }
 
-    calculateDailyTotalExpenses(statementPeriodDay) {
+    static getDailyTotalExpenses(statementPeriodDay) {
         let dayTotalExpenses = 0;
         for (let category in statementPeriodDay.expenses) {
             for (let subcategory in statementPeriodDay.expenses[category]) {
@@ -22,9 +22,9 @@ export default class TotalsExpenses extends React.Component {
         return dayTotalExpenses;
     }
 
-    calculateStatementPeriodTotalExpenses(statementPeriod) {
+    static getTotalExpenses(statementPeriod) {
         let totalExpenses = statementPeriod.statementPeriodDays.reduce((sum, statementPeriodDay) => {
-            return sum + this.calculateDailyTotalExpenses(statementPeriodDay);
+            return sum + TotalsExpenses.getDailyTotalExpenses(statementPeriodDay);
         }, 0);
 
         return totalExpenses;
@@ -37,7 +37,7 @@ export default class TotalsExpenses extends React.Component {
                     <Col xs={4}><h3>Expenses</h3></Col>
                     <Col >
                         <h3 className="pull-right" style={{color:'red'}}>
-                            {this.calculateStatementPeriodTotalExpenses(
+                            {TotalsExpenses.getTotalExpenses(
                                 this.props.displayedStatementPeriod) + ' lv.'}
                         </h3>
                     </Col>

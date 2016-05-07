@@ -12,6 +12,7 @@ import TotalsIncomeType from './totalsIncomeType'
 import TotalsExpenses from './totalsExpenses'
 import TotalsIncome from './totalsIncome'
 import TotalsHeader from './totalsHeader'
+import StatementPeriodTotal from './statementPeriodTotal'
 
 export default class StatementPeriodTotals extends React.Component {
     constructor(props) {
@@ -36,6 +37,12 @@ export default class StatementPeriodTotals extends React.Component {
 
     getCashValue(income) {
         return (income && income[this.state.incomeType]) || 0;
+    }
+
+    getTotal(){
+        let totalIncome = TotalsIncome.getTotalIncome(this.props.displayedStatementPeriod.income);
+        let totalExpenses = TotalsExpenses.getTotalExpenses(this.props.displayedStatementPeriod);
+        return (totalIncome - totalExpenses).toFixed(2);
     }
 
     showTotalsModal(incomeType) {
@@ -72,6 +79,9 @@ export default class StatementPeriodTotals extends React.Component {
                     <TotalsExpenses
                         displayedStatementPeriod={this.props.displayedStatementPeriod}>
                     </TotalsExpenses>
+                    <StatementPeriodTotal
+                        total={this.getTotal()}>
+                    </StatementPeriodTotal>
                 </Panel>
                 <StatementPeriodDayModal
                     showModal={this.state.showModal}
