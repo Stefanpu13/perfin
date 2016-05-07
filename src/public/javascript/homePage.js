@@ -59,7 +59,7 @@ export default class HomePage extends React.Component {
         return (
             <div>
                 <Navbar>
-                    <Navbar.Header> {/*<Nav bsStyle="tabs" activeKey={this.state.active} onSelect={(selectedKey) => this.handleSelect(selectedKey)}> <NavItem eventKey={1}> Home </NavItem> </Nav>*/}
+                    <Navbar.Header>
                         <Navbar.Brand> <a href="#">Home</a> </Navbar.Brand> <Navbar.Toggle />
                     </Navbar.Header>
                     <Navbar.Form pullLeft>
@@ -87,8 +87,6 @@ export default class HomePage extends React.Component {
                             this.props.onCreateNewStatementPeriod(this.state.selectedStatementPeriodDay)}
                                     disabled={this.state.createStatementButtonDisabled}
                             >Create Statement Period</Button>
-                            {' '}
-                            <Button >End Statement period</Button>
                         </Navbar.Form>
                     </Navbar.Collapse>
                 </Navbar>
