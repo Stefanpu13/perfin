@@ -7,7 +7,7 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import StatementPeriodDay from './statementPeriodDay'
+import StatementPeriodDay from './statementPeriodDay/statementPeriodDay'
 import {Table} from 'react-bootstrap'
 
 function getCategoryExpensesTotal(expenses, expensesCategory, expensesSubcategory) {
