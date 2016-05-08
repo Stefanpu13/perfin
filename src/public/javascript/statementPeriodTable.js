@@ -33,7 +33,14 @@ class StatementPeriodTable extends React.Component {
     }
 
     componentWillReceiveProps(newProps) {
-        this.setState({showEditButtonRow: this.props.expensesSubcategory !== 'totals'});
+        this.setState({
+            showEditButtonRow: this.props.expensesSubcategory !== 'totals'
+        });
+    }
+
+    selectStatementPeriodDay(statementPeriodDay) {
+        this.setState({selectDayId: statementPeriodDay._id});
+        this.props.selectStatementPeriodDay(statementPeriodDay);
     }
 
     render() {
@@ -51,15 +58,18 @@ class StatementPeriodTable extends React.Component {
                     <tbody>
                     {
                         this.props.statementPeriodDays.map((statementPeriodDay, i) => {
+                            let isSelected = (this.state.selectDayId === statementPeriodDay._id);
                             var total =
-                                getCategoryExpensesTotal(statementPeriodDay.expenses, this.props.expensesCategory,
+                                getCategoryExpensesTotal(statementPeriodDay.expenses,
+                                    this.props.expensesCategory,
                                     this.props.expensesSubcategory);
 
                             return <StatementPeriodDay
+                                isSelected={isSelected}
                                 total={total}
                                 statementPeriodDay={statementPeriodDay}
                                 showEditButtonRow={this.state.showEditButtonRow}
-                                selectStatementPeriodDay={this.props.selectStatementPeriodDay}
+                                selectStatementPeriodDay={this.selectStatementPeriodDay.bind(this)}
                                 openEditExpenseModal={() => this.props.openEditExpenseModal(statementPeriodDay)}
                                 openAddExpenseModal={() => this.props.openAddExpenseModal(statementPeriodDay)}
                                 key={i}

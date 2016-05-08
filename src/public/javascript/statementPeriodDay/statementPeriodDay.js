@@ -10,12 +10,18 @@ export default class StatementPeriodDay extends React.Component {
         super(props);
     }
 
+    setIsSelected() {
+        return this.props.isSelected ? ' statement-period-table-day-selected' : '';
+    }
+
     render() {
+
 
         return (
             <tr>
                 {/*Date col*/}
-                <td className="col-xs-2"
+                <td className={"col-xs-2 statement-period-table-day" + this.setIsSelected()}
+                    //style={this.setDayStyle()}
                     onClick={() => this.props.selectStatementPeriodDay(this.props.statementPeriodDay)}>
                     <div >
                         {moment(this.props.statementPeriodDay.day).format('MM/DD/YYYY')}
@@ -28,7 +34,7 @@ export default class StatementPeriodDay extends React.Component {
                 {/*Edit value*/}
                 {
                     this.props.showEditButtonRow ?
-                        <td className="col-xs-1">
+                        <td className="col-xs-1 statement-period-table-edit">
                             <div className="text-center"
                                  onClick={() => this.props.openEditExpenseModal()}
                             >
@@ -39,7 +45,7 @@ export default class StatementPeriodDay extends React.Component {
                         undefined
                 }
                 {/*Add new value*/}
-                <td className="col-xs-1">
+                <td className="col-xs-1 statement-period-table-edit">
                     <div className="text-center"
                          onClick={() => this.props.openAddExpenseModal()}>
                         <span className="glyphicon glyphicon-plus text-center"></span>

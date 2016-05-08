@@ -19,7 +19,6 @@ export default class HomePage extends React.Component {
         };
     }
 
-
     componentWillReceiveProps(newProps) {
         this.setState({
             createStatementButtonDisabled: StatementPeriod.exists(newProps.displayedStatementPeriod)
