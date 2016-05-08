@@ -22,6 +22,13 @@ export default class StatementPeriod extends React.Component {
         };
     }
 
+    componentWillReceiveProps(newProps){
+        if(newProps.homeButtonPressed){
+            this.selectCategory('monthly totals');
+            this.selectSubcategory('none');
+        }
+    }
+
     static exists(statementPeriod) {
         return (statementPeriod !== null);
     }
@@ -46,9 +53,9 @@ export default class StatementPeriod extends React.Component {
 
     selectCategory(eventKey) {
         this.setState({
-            activeCategoryName: eventKey,
-            activeSubcategory: eventKey + ' totals'
+            activeCategoryName: eventKey
         });
+        this.selectSubcategory(eventKey + ' totals');
     }
 
     selectSubcategory(eventKey) {

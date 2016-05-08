@@ -19,9 +19,9 @@ export default class HomePage extends React.Component {
         };
     }
 
+
     componentWillReceiveProps(newProps) {
         this.setState({
-            //createStatementButtonDisabled: newProps.displayedStatementPeriod !== null
             createStatementButtonDisabled: StatementPeriod.exists(newProps.displayedStatementPeriod)
         });
     }
@@ -35,9 +35,8 @@ export default class HomePage extends React.Component {
         let dayIsStartDay =
             this.props.displayedStatementPeriod.statementPeriodDays[0]._id === statementPeriodDay._id;
 
-        let buttonIsDisabled = !this.props.displayedStatementPeriod.isLastPeriod ||
-            !dayIsInCurrentPeriod || dayIsStartDay;
-
+        let buttonIsDisabled =
+            !this.props.displayedStatementPeriod.isLastPeriod || !dayIsInCurrentPeriod || dayIsStartDay;
 
         return buttonIsDisabled;
     }
@@ -51,23 +50,31 @@ export default class HomePage extends React.Component {
         });
     }
 
+    goToHomeView() {
+        let homeButtonPressed = true;
+        this.props.getCurrentStatementPeriod(homeButtonPressed)
+    }
+
     render() {
         return (
             <div>
                 <Navbar>
                     <Navbar.Header>
-                        <Navbar.Brand> <a href="#">Home</a> </Navbar.Brand> <Navbar.Toggle />
+                        <Navbar.Brand>
+                            <a href="#"
+                               onClick={this.goToHomeView.bind(this)}>
+                                Home</a>
+                        </Navbar.Brand>
+                        <Navbar.Toggle />
                     </Navbar.Header>
                     <Navbar.Form pullLeft>
-                        <Button onClick={() =>
-                        this.props.getPreviousStatementPeriod()}>
+                        <Button onClick={this.props.getPreviousStatementPeriod.bind(this)}>
                             <span className="glyphicon glyphicon-arrow-left"></span>
                             {' '}
                             <span>Previous</span>
                         </Button>
                         {' '}
-                        <Button onClick={() =>
-                        this.props.getNextStatementPeriod()}>
+                        <Button onClick={this.props.getNextStatementPeriod.bind(this)}>
                             <span>Next</span>
                             {' '}
                             <span className="glyphicon glyphicon-arrow-right"></span>
@@ -95,5 +102,4 @@ export default class HomePage extends React.Component {
             </div>
         )
     }
-
 }

@@ -7,7 +7,6 @@ import HomePage from '../homePage'
 import fetchSettings from '../http/fetchSettings'
 import fetchGlobals from '../http/fetchGlobals'
 
-
 function getCategoriesStructure() {
     return {
         categories: [
@@ -62,24 +61,9 @@ export default class HomePageContainer extends React.Component {
             });
     }
 
-    getCurrentStatementPeriod() {
-        fetch('http://localhost:3000/api/monthlyStatementPeriod/getCurrent')
-            .then(fetchGlobals.checkStatus)
-            .then(res => res.json())
-            .then((displayedStatementPeriod) => {
-                this.setState({
-                    getCurrentStatementPeriodHasError: false,
-                    displayedStatementPeriod: displayedStatementPeriod,
-                    loaded: true
-                });
-            })
-            .catch(error => {
-                // display dialog with message that current statement period could not be returned
-                this.setState({getCurrentStatementPeriodHasError: true, loaded: true});
-                let message = "Could not load current statement period.";
-                this.props.showReceivedError(message);
-                console.log('request failed', error)
-            });
+    getCurrentStatementPeriod(homeButtonPressed) {
+        let url = 'http://localhost:3000/api/monthlyStatementPeriod/getCurrent';
+        this.fetchStatementPeriod(url, homeButtonPressed);
     }
 
     getPreviousStatementPeriod() {
@@ -89,14 +73,14 @@ export default class HomePageContainer extends React.Component {
         this.fetchStatementPeriod(url);
     }
 
-    getNextStatementPeriod(){
+    getNextStatementPeriod() {
         let currentStatementPeriodId = this.state.displayedStatementPeriod._id;
         let url = 'http://localhost:3000/api/monthlyStatementPeriod/getNext/' + currentStatementPeriodId;
 
         this.fetchStatementPeriod(url);
     }
 
-    fetchStatementPeriod(url){
+    fetchStatementPeriod(url, homeButtonPressed) {
         fetch(url)
             .then(fetchGlobals.checkStatus)
             .then(res => res.json())
@@ -105,6 +89,7 @@ export default class HomePageContainer extends React.Component {
                 this.setState({
                     getCurrentStatementPeriodHasError: false,
                     displayedStatementPeriod: displayedStatementPeriod || this.state.displayedStatementPeriod,
+                    homeButtonPressed: homeButtonPressed || false,
                     loaded: true
                 });
             })
@@ -135,7 +120,7 @@ export default class HomePageContainer extends React.Component {
             });
     }
 
-    updateStatementPeriodIncome(updatedIncome){
+    updateStatementPeriodIncome(updatedIncome) {
         let url = 'http://localhost:3000/api/monthlyStatementPeriod/updateIncome/' +
             this.state.displayedStatementPeriod._id;
 
@@ -187,15 +172,15 @@ export default class HomePageContainer extends React.Component {
     render() {
         return (
             <HomePage displayedStatementPeriod={this.state.displayedStatementPeriod}
+                      homeButtonPressed={this.state.homeButtonPressed}
                       categoryTree={getCategoriesStructure()}
                       loaded={this.state.loaded}
                       getCurrentStatementHasError={this.state.getCurrentStatementPeriodHasError}
+                      getCurrentStatementPeriod={this.getCurrentStatementPeriod.bind(this)}
                       getPreviousStatementPeriod={this.getPreviousStatementPeriod.bind(this)}
                       getNextStatementPeriod={this.getNextStatementPeriod.bind(this)}
                       changeExpense={this.updateStatementPeriodExpenses.bind(this)}
                       updateIncome={this.updateStatementPeriodIncome.bind(this)}
-                //onSelectStatementPeriodDay={(statementPeriodDay) =>
-                //this.onSelectStatementPeriodDay(statementPeriodDay)}
                       createNewStatementPeriod={(periodFirstDay) =>
                        this.createNewStatementPeriod(periodFirstDay)}
             >
