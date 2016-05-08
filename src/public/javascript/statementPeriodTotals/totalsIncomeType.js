@@ -21,7 +21,7 @@ export default class TotalsIncomeType extends React.Component {
     render() {
         return (
             <Col>
-                <Col xs={4}><h4>Salary:</h4></Col>
+                <Col xs={4}><h4>{this.props.incomeType}:</h4></Col>
                 <Col xs={8} onClick={this.showTotalsModal.bind(this)}>
                     <h4 style={{paddingLeft:30}} className="pull-right">
                         <span className="glyphicon glyphicon-pencil"></span>
