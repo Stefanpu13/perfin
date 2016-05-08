@@ -22,8 +22,8 @@ export default class StatementPeriod extends React.Component {
         };
     }
 
-    componentWillReceiveProps(newProps){
-        if(newProps.homeButtonPressed){
+    componentWillReceiveProps(newProps) {
+        if (newProps.homeButtonPressed && StatementPeriod.exists(newProps.displayedStatementPeriod)) {
             this.selectCategory('monthly totals');
             this.selectSubcategory('none');
         }
@@ -145,7 +145,7 @@ export default class StatementPeriod extends React.Component {
                             <Tab eventKey={'monthly totals'} title="Monthly Totals">
                                 <StatementPeriodTotalsContainer
                                     displayedStatementPeriod={this.props.displayedStatementPeriod}
-                                    updateIncome ={this.props.updateIncome}>
+                                    updateIncome={this.props.updateIncome}>
                                 </StatementPeriodTotalsContainer>
                             </Tab>
                             {
