@@ -84,12 +84,12 @@ export default class HomePageContainer extends React.Component {
         fetch(url)
             .then(fetchGlobals.checkStatus)
             .then(res => res.json())
-            .then((displayedStatementPeriod) => {
+            .then((fetchedStatementPeriod) => {
 
                 this.setState({
                     getCurrentStatementPeriodHasError: false,
-                    displayedStatementPeriod: displayedStatementPeriod || this.state.displayedStatementPeriod,
-                    homeButtonPressed: homeButtonPressed || false,
+                    displayedStatementPeriod: fetchedStatementPeriod || this.state.displayedStatementPeriod,
+                    homeButtonPressed: homeButtonPressed,
                     loaded: true
                 });
             })
