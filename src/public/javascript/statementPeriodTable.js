@@ -26,6 +26,8 @@ function getCategoryExpensesTotal(expenses, expensesCategory, expensesSubcategor
     return total;
 }
 
+let selectDayId;
+
 class StatementPeriodTable extends React.Component {
     constructor(props) {
         super(props);
@@ -36,10 +38,15 @@ class StatementPeriodTable extends React.Component {
         this.setState({
             showEditButtonRow: this.props.expensesSubcategory !== 'totals'
         });
+
+        if(newProps.statementPeriodDays.some(d => d._id===selectDayId) === false){
+            selectDayId = undefined;
+        }
     }
 
     selectStatementPeriodDay(statementPeriodDay) {
-        this.setState({selectDayId: statementPeriodDay._id});
+        selectDayId = statementPeriodDay._id;
+        //this.setState({selectDayId: statementPeriodDay._id});
         this.props.selectStatementPeriodDay(statementPeriodDay);
     }
 
@@ -58,7 +65,7 @@ class StatementPeriodTable extends React.Component {
                     <tbody>
                     {
                         this.props.statementPeriodDays.map((statementPeriodDay, i) => {
-                            let isSelected = (this.state.selectDayId === statementPeriodDay._id);
+                            let isSelected = (selectDayId === statementPeriodDay._id);
                             var total =
                                 getCategoryExpensesTotal(statementPeriodDay.expenses,
                                     this.props.expensesCategory,
