@@ -21,6 +21,7 @@ let createStatementPeriodFromExistingPeriod = (req, res, next) => {
             res.status(500).end('Error occurred');
         } else {
             req.newStatementPeriod = newStatementPeriod;
+            req.newStatementPeriod._id= statementPeriod._doc._id;
             next();
         }
     });
